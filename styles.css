@@ -1,0 +1,72 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.search-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.search-container input {
+    margin: 10px;
+    padding: 10px;
+    width: 80%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.result {
+    margin: 10px;
+    padding: 10px;
+    width: 80%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+.result table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto; /* Allow table columns to adjust based on content */
+}
+
+.result th, .result td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+    white-space: nowrap; /* Prevent wrapping */
+    overflow: hidden; /* Ensure no overflow into the next column */
+    text-overflow: ellipsis; /* Add ellipsis if text overflows */
+}
+
+.result th {
+    background-color: #f2f2f2;
+}
+
+#resultTable {
+    width: 100%; /* Make the table take the full width of the container */
+}
+
+/* Adjust column widths to ensure they fit on one line */
+#resultTable th,
+#resultTable td {
+    white-space: nowrap; /* Prevent wrapping */
+}
+
+/* Specific styling for Tech column */
+#resultTable th:nth-child(8), /* Assuming 'Tech' is the 8th column */
+#resultTable td:nth-child(8) {
+    min-width: 70px; /* Ensure enough width for content */
+    max-width: 150px; /* Ensure enough width for content */
+}
+
+/* Specific styling for Equipment column */
+#resultTable th:nth-child(9), /* Assuming 'Equipment' is the 9th column */
+#resultTable td:nth-child(9) {
+    min-width: 300px;
+    max-width: 600px;
+}
+
+/* Add similar width settings for other columns as needed */
