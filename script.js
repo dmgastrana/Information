@@ -16,6 +16,11 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error parsing CSV:', error);
         }
     });
+
+    // Add event listeners to search input fields
+    document.querySelectorAll('.search-container input').forEach(input => {
+        input.addEventListener('input', filterTable);
+    });
 });
 
 function displayResults(data) {
@@ -42,74 +47,25 @@ function updateTotalRowCount(count) {
     rowCountElement.textContent = `Total Rows: ${count}`;
 }
 
-function updateVisibleRowCount(count) {
-    const visibleRowCountElement = document.getElementById('visibleRowCount');
-    if (visibleRowCountElement) {
-        visibleRowCountElement.textContent = `Visible Rows: ${count}`;
-    } else {
-        const div = document.createElement('div');
-        div.id = 'visibleRowCount';
-        div.textContent = `Visible Rows: ${count}`;
-        document.querySelector('.upload-container').appendChild(div);
-    }
-}
-
-function displayRowInNewWindow(row) {
-    const headers = [
-        "Serial Number", "UP#", "Make", "Office", "Modality", "Status", "Room", "Tech",
-        "Equipment", "Contract/Warranty Begin", "Contract/Warranty End Date", "Service Support",
-        "Support Phone#", "Support Email", "Service Annual Fee", "Note", "Purchase From",
-        "Purchase Date", "Delivery Date", "Install Date", "Remove By", "Remove Date", "Remove Description"
-    ];
-    const newWindow = window.open('', '_blank', 'width=600,height=800');
-    newWindow.document.write('<html><head><title>Row Details</title></head><body>');
-    newWindow.document.write('<div style="display: flex; flex-direction: column; gap: 10px;">');
-    row.forEach((cell, index) => {
-        newWindow.document.write(`<div><strong>${headers[index]}:</strong> ${cell}</div>`);
-    });
-    newWindow.document.write('</div>');
-    newWindow.document.write('</body></html>');
-}
-
-document.querySelectorAll('.search-container input').forEach(input => {
-    input.addEventListener('input', filterTable);
-});
-
 function filterTable() {
     const serialNumberValue = document.getElementById('serialNumber').value.toLowerCase();
     const makeValue = document.getElementById('make').value.toLowerCase();
     const officeValue = document.getElementById('office').value.toLowerCase();
     const modalityValue = document.getElementById('modality').value.toLowerCase();
 
-    const rows = JSON.parse(document.getElementById('csvTable').dataset.rows);
-    let visibleRowCount = 0;
-    const tbody = document.querySelector('#csvTable tbody');
-    tbody.innerHTML = '';
-
-    rows.forEach((row) => {
-        const serialNumberMatch = row["Serial Number"].toLowerCase().includes(serialNumberValue);
-        const makeMatch = row["Make"].toLowerCase().includes(makeValue);
-        const officeMatch = row["Office"].toLowerCase().includes(officeValue);
-        const modalityMatch = row["Modality"].toLowerCase().includes(modalityValue);
-
-        if (serialNumberMatch && makeMatch && officeMatch && modalityMatch) {
-            const tr = document.createElement('tr');
-            Object.values(row).forEach(cell => {
-                const td = document.createElement('td');
-                td.textContent = (cell || '').trim(); // Ensure trimming of whitespace
-                tr.appendChild(td);
-            });
-            tr.addEventListener('click', function() {
-                displayRowInNewWindow(Object.values(row));
-            });
-            tbody.appendChild(tr);
-            visibleRowCount++;
-        }
+    const filteredData = equipmentData.filter(item => {
+        const serialNumberMatch = item['Serial Number'].toLowerCase().includes(serialNumberValue);
+        const makeMatch = item['Make'].toLowerCase().includes(makeValue);
+        const officeMatch = item['Office'].toLowerCase().includes(officeValue);
+        const modalityMatch = item['Modality'].toLowerCase().includes(modalityValue);
+        return serialNumberMatch && makeMatch && officeMatch && modalityMatch;
     });
 
-    updateVisibleRowCount(visibleRowCount); // Update count based on filtered rows
+    displayResults(filteredData);
 }
 
+
+         
    
 
 
