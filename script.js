@@ -48,21 +48,39 @@ function updateTotalRowCount(count) {
 }
 
 function filterTable() {
+    console.log('Filtering table'); // Debug: Log when filtering starts
+
     const serialNumberValue = document.getElementById('serialNumber').value.toLowerCase();
+    console.log('Serial Number filter:', serialNumberValue); // Debug: Log the value
+
     const makeValue = document.getElementById('make').value.toLowerCase();
+    console.log('Make filter:', makeValue); // Debug: Log the value
+
     const officeValue = document.getElementById('office').value.toLowerCase();
+    console.log('Office filter:', officeValue); // Debug: Log the value
+
     const modalityValue = document.getElementById('modality').value.toLowerCase();
+    console.log('Modality filter:', modalityValue); // Debug: Log the value
 
     const filteredData = equipmentData.filter(item => {
+        console.log('Checking item:', item); // Debug: Log each item being checked
+
         const serialNumberMatch = item['Serial Number'].toLowerCase().includes(serialNumberValue);
         const makeMatch = item['Make'].toLowerCase().includes(makeValue);
         const officeMatch = item['Office'].toLowerCase().includes(officeValue);
         const modalityMatch = item['Modality'].toLowerCase().includes(modalityValue);
+
+        console.log('Matches:', serialNumberMatch, makeMatch, officeMatch, modalityMatch); // Debug: Log match results
+
         return serialNumberMatch && makeMatch && officeMatch && modalityMatch;
     });
 
+    console.log('Filtered data:', filteredData); // Debug: Log the filtered data
+
     displayResults(filteredData);
 }
+
+       
 
 
          
