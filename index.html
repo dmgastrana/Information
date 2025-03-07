@@ -74,85 +74,14 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-    <script>
-        let equipmentData = [];
-
-        // Load CSV data from GitHub repository on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            const csvUrl = 'https://raw.githubusercontent.com/your-username/your-repository-name/main/datable.csv';
-
-            Papa.parse(csvUrl, {
-                download: true,
-                header: true,
-                complete: function(results) {
-                    equipmentData = results.data;
-                    localStorage.setItem('equipmentData', JSON.stringify(equipmentData));
-                    displayResults(equipmentData);
-                }
-            });
-        });
-
-        function displayResults(data) {
-            const resultTable = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
-
-            resultTable.innerHTML = '';
-
-            data.forEach((item, index) => {
-                const row = resultTable.insertRow();
-                Object.entries(item).forEach(([key, val]) => {
-                    if (key !== 'contractFile') {
-                        const cell = row.insertCell();
-                        cell.textContent = val;
-                        cell.setAttribute('tabindex', '0');
-
-                        cell.addEventListener('click', () => openEditWindow(index));
-                    }
-                });
-            });
-        }
-
-        function searchEquipment() {
-            const serialNumberQuery = document.getElementById('serialNumber').value.toLowerCase().trim();
-            const officeQuery = document.getElementById('office').value.toLowerCase().trim();
-            const modalityQuery = document.getElementById('modality').value.toLowerCase().trim();
-            const makeQuery = document.getElementById('make').value.toLowerCase().trim();
-            const resultTable = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
-
-            resultTable.innerHTML = ''; // Clear previous results
-
-            const filteredData = equipmentData.filter(item => {
-                return (serialNumberQuery === '' || item['Serial Number'].toLowerCase().includes(serialNumberQuery)) &&
-                       (officeQuery === '' || item['Office'].toLowerCase().includes(officeQuery)) &&
-                       (modalityQuery === '' || item['Modality'].toLowerCase().includes(modalityQuery)) &&
-                       (makeQuery === '' || item['Make'].toLowerCase().includes(makeQuery));
-            });
-
-            displayResults(filteredData); // Display filtered results
-        }
-
-        function openEditWindow(index) {
-            const rowData = equipmentData[index];
-            const headers = Object.keys(rowData);
-
-            let editWindow = window.open('', '', 'width=600,height=800');
-            editWindow.document.write('<html><head><title>Edit Row</title></head><body>');
-            editWindow.document.write('<form id="editForm">');
-            headers.forEach(header => {
-                editWindow.document.write(`<label>${header}</label><br>`);
-                editWindow.document.write(`<input type="text" name="${header}" value="${rowData[header]}" style="width:100%;"><br><br>`);
-            });
-            editWindow.document.write('<button type="button" onclick="window.opener.saveEditForm()">Save</button>');
-            editWindow.document.write('</form>');
-            editWindow.document.write('</body></html>');
-        }
-    </script>
+    <script src="script.js"></script>
 </head>
 <body>
     <div class="search-container">
-        <input type="text" id="serialNumber" placeholder="Search by Serial Number" onkeyup="searchEquipment()">
-        <input type="text" id="office" placeholder="Search by Office" onkeyup="searchEquipment()">
-        <input type="text" id="modality" placeholder="Search by Modality" onkeyup="searchEquipment()">
-        <input type="text" id="make" placeholder="Search by Make" onkeyup="searchEquipment()">
+        <input type="text" id="serialNumber" placeholder="Search by Serial Number">
+        <input type="text" id="office" placeholder="Search by Office">
+        <input type="text" id="modality" placeholder="Search by Modality">
+        <input type="text" id="make" placeholder="Search by Make">
     </div>
 
     <table id="resultTable" class="result">
@@ -186,13 +115,6 @@
         </thead>
         <tbody></tbody>
     </table>
+    <div id="rowCount"></div>
 </body>
 </html>
-
-       
-       
-          
-           
- 
-                 
-
