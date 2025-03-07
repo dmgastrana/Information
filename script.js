@@ -1,13 +1,16 @@
-// Load CSV data from GitHub repository on page load
 document.addEventListener('DOMContentLoaded', () => {
-    const csvUrl = 'https://raw.githubusercontent.com/your-username/your-repository-name/main/datable.csv';
+    const csvUrl = 'https://raw.githubusercontent.com/dmgastrana/Information/main/datatable.csv';
+
+    console.log('Fetching CSV from URL:', csvUrl); // Log the URL
 
     Papa.parse(csvUrl, {
         download: true,
         header: true,
         complete: function(results) {
-            displayTable(results.data);
-            updateTotalRowCount(results.data.length); // Update total count after loading
+            console.log('Parsed CSV data:', results.data); // Log the parsed data
+            equipmentData = results.data;
+            localStorage.setItem('equipmentData', JSON.stringify(equipmentData));
+            displayResults(equipmentData);
         },
         error: function(error) {
             console.error('Error parsing CSV:', error);
@@ -15,24 +18,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function displayTable(rows) {
-    const tbody = document.querySelector('#csvTable tbody');
-    tbody.innerHTML = '';
-    rows.forEach((row, index) => {
-        const tr = document.createElement('tr');
-        Object.values(row).forEach(cell => {
-            const td = document.createElement('td');
-            td.textContent = (cell || '').trim(); // Ensure trimming of whitespace
-            tr.appendChild(td);
-        });
-        tr.addEventListener('click', function() {
-            displayRowInNewWindow(Object.values(row));
-        });
-        tbody.appendChild(tr);
-    });
+function displayResults(data) {
+    console.log('Displaying results:', data); // Log the data to be displayed
+    const resultTable = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
 
-    document.getElementById('csvTable').dataset.rows = JSON.stringify(rows); // Store original rows data
-    updateTotalRowCount(rows.length);
+    resultTable.innerHTML = '';
+
+    data.forEach((item, index) => {
+        const row = resultTable.insertRow();
+        Object.entries(item).forEach(([key, val]) => {
+            if (key !== 'contractFile') {
+                const cell = row.insertCell();
+                cell.textContent = val;
+                cell.setAttribute('tabindex', '0');
+            }
+        });
+    });
+    updateTotalRowCount(data.length); // Update total row count
 }
 
 function updateTotalRowCount(count) {
@@ -108,10 +110,9 @@ function filterTable() {
     updateVisibleRowCount(visibleRowCount); // Update count based on filtered rows
 }
 
-              
+   
 
 
-
-       
+   
                     
                     
