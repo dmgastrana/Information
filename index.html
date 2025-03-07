@@ -97,6 +97,8 @@
             background-color: #f2f2f2;
         }
     </style>
+</head>
+<body>
     <script type="text/javascript">
         var password = "dmg1129"; // Replace 'dmg1129' with your desired password
         var enteredPassword = prompt("Please enter the password:");
@@ -104,88 +106,60 @@
         if (enteredPassword !== password) {
             document.body.innerHTML = "Access denied.";
         } else {
-            document.body.innerHTML = "Access granted. Loading content...";
-
-            // You can add additional code here to load your actual content
-            document.body.innerHTML += `
-                <div class="search-container">
-                    <input type="text" id="serialNumber" placeholder="Search by Serial Number">
-                    <input type="text" id="office" placeholder="Search by Office">
-                    <input type="text" id="modality" placeholder="Search by Modality">
-                    <input type="text" id="make" placeholder="Search by Make">
-                </div>
-                <table id="resultTable" class="result">
-                    <thead>
-                        <tr>
-                            <th>Serial Number</th>
-                            <th>UP#</th>
-                            <th>Make</th>
-                            <th>Office</th>
-                            <th>Modality</th>
-                            <th>Status</th>
-                            <th>Room</th>
-                            <th>Tech</th>
-                            <th>Equipment</th>
-                            <th>Contract/Warranty Begin</th>
-                            <th>Contract/Warranty End Date</th>
-                            <th>Service Support</th>
-                            <th>Support Phone#</th>
-                            <th>Support Email</th>
-                            <th>Coverage Days left</th>
-                            <th>Service Annual Fee</th>
-                            <th>Note</th>
-                            <th>Purchase From</th>
-                            <th>Purchase Date</th>
-                            <th>Delivery Date</th>
-                            <th>Install Date</th>
-                            <th>Remove By</th>
-                            <th>Remove Date</th>
-                            <th>Remove Description</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-                <div id="rowCount"></div>
-                <div class="vertical-view" id="verticalView">
-                    <table>
-                        <tbody id="verticalData"></tbody>
-                    </table>
-                </div>
-            `;
-
-            function handleRowClick(event) {
-                const row = event.target.closest("tr");
-                const headers = Array.from(document.querySelectorAll("#resultTable th"));
-                const data = Array.from(row.children);
-                const verticalDataContainer = document.getElementById("verticalData");
-
-                verticalDataContainer.innerHTML = "";
-
-                headers.forEach((header, index) => {
-                    const headerText = header.textContent;
-                    const dataText = data[index].textContent;
-
-                    verticalDataContainer.innerHTML += `
-                        <tr>
-                            <th>${headerText}</th>
-                            <td>${dataText}</td>
-                        </tr>
-                    `;
-                });
-
-                document.getElementById("verticalView").style.display = "block";
-            }
-
-            // Adding event listeners to table rows
-            document.querySelectorAll("#resultTable tbody tr").forEach((row) => {
-                row.addEventListener("click", handleRowClick);
-            });
+            document.getElementById("content").style.display = "block";
         }
     </script>
+    <div id="content" style="display: none;">
+        <div class="search-container">
+            <input type="text" id="serialNumber" placeholder="Search by Serial Number">
+            <input type="text" id="office" placeholder="Search by Office">
+            <input type="text" id="modality" placeholder="Search by Modality">
+            <input type="text" id="make" placeholder="Search by Make">
+        </div>
+
+        <table id="resultTable" class="result">
+            <thead>
+                <tr>
+                    <th>Serial Number</th>
+                    <th>UP#</th>
+                    <th>Make</th>
+                    <th>Office</th>
+                    <th>Modality</th>
+                    <th>Status</th>
+                    <th>Room</th>
+                    <th>Tech</th>
+                    <th>Equipment</th>
+                    <th>Contract/Warranty Begin</th>
+                    <th>Contract/Warranty End Date</th>
+                    <th>Service Support</th>
+                    <th>Support Phone#</th>
+                    <th>Support Email</th>
+                    <th>Coverage Days left</th>
+                    <th>Service Annual Fee</th>
+                    <th>Note</th>
+                    <th>Purchase From</th>
+                    <th>Purchase Date</th>
+                    <th>Delivery Date</th>
+                    <th>Install Date</th>
+                    <th>Remove By</th>
+                    <th>Remove Date</th>
+                    <th>Remove Description</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div id="rowCount"></div>
+        <div class="vertical-view" id="verticalView">
+            <table>
+                <tbody id="verticalData"></tbody>
+            </table>
+        </div>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script src="script.js"></script>
-</head>
-<body>
-    <!-- The initial body content will be overwritten by the script if the password is correct -->
 </body>
 </html>
+
+            
+     
+                           
