@@ -1,226 +1,113 @@
-<<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Equipment Search</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-
-        .search-container, .upload-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 50px;
-        }
-
-        .search-container input {
-            margin: 10px;
-            padding: 10px;
-            width: 80%;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .result {
-            margin: 10px;
-            padding: 10px;
-            width: 80%;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background-color: #f9f9f9;
-        }
-
-        .result table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: auto;
-        }
-
-        .result th, .result td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .result th {
-            background-color: #f2f2f2;
-        }
-
-        #resultTable {
-            width: 100%;
-        }
-
-        #resultTable th,
-        #resultTable td {
-            white-space: nowrap;
-        }
-
-        #resultTable th:nth-child(8),
-        #resultTable td:nth-child(8) {
-            min-width: 70px;
-            max-width: 150px;
-        }
-
-        #resultTable th:nth-child(9),
-        #resultTable td:nth-child(9) {
-            min-width: 300px;
-            max-width: 600px;
-        }
-    </style>
-</head>
-<body>
-    <div class="search-container">
-        <input type="text" id="serialNumber" placeholder="Search by Serial Number" onkeyup="searchEquipment()">
-        <input type="text" id="office" placeholder="Search by Office" onkeyup="searchEquipment()">
-        <input type="text" id="modality" placeholder="Search by Modality" onkeyup="searchEquipment()">
-        <input type="text" id="make" placeholder="Search by Make" onkeyup="searchEquipment()">
-    </div>
-    
-    <div class="upload-container">
-        <h1>Upload Data</h1>
-        <input type="file" id="fileInput">
-        <button onclick="readFile()">Upload</button>
-        <pre id="output"></pre>
-    </div>
-
-    <table id="resultTable" class="result">
-        <thead>
-            <tr>
-                <th>Serial Number</th>
-                <th>UP#</th>
-                <th>Make</th>
-                <th>Office</th>
-                <th>Modality</th>
-                <th>Status</th>
-                <th>Room</th>
-                <th>Tech</th>
-                <th>Equipment</th>
-                <th>Contract/Warranty Begin</th>
-                <th>Contract/Warranty End Date</th>
-                <th>Service Support</th>
-                <th>Support Phone#</th>
-                <th>Support Email</th>
-                <th>Coverage Days left</th>
-                <th>Service Annual Fee</th>
-                <th>Note</th>
-                <th>Purchase From</th>
-                <th>Purchase Date</th>
-                <th>Delivery Date</th>
-                <th>Install Date</th>
-                <th>Remove By</th>
-                <th>Remove Date</th>
-                <th>Remove Description</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-    <script>
-        let equipmentData = [];
-
-        $(document).ready(function() {
-            $('#resultTable').DataTable({
-                "paging": true,
-                "searching": true,
-                "ordering": true
-            });
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const storedData = localStorage.getItem('equipmentData');
-            if (storedData) {
-                equipmentData = JSON.parse(storedData);
-                displayResults(equipmentData);
+document.getElementById('uploadButton').addEventListener('click', function() {
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+    if (file) {
+        Papa.parse(file, {
+            complete: function(results) {
+                displayTable(results.data);
+                updateTotalRowCount(results.data.length - 1); // Update total count after uploading
             }
         });
+    }
+});
 
-        function readFile() {
-            const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
+function displayTable(rows) {
+    const tbody = document.querySelector('#csvTable tbody');
+    tbody.innerHTML = '';
+    rows.forEach((row, index) => {
+        if (index === 0) return; // Skip header row
+        const tr = document.createElement('tr');
+        row.forEach(cell => {
+            const td = document.createElement('td');
+            td.textContent = cell.trim(); // Ensure trimming of whitespace
+            tr.appendChild(td);
+        });
+        tr.addEventListener('click', function() {
+            displayRowInNewWindow(row);
+        });
+        tbody.appendChild(tr);
+    });
 
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const csvData = event.target.result;
-                    const newData = parseCSV(csvData);
-                    equipmentData = [...equipmentData, ...newData];
+    document.getElementById('csvTable').dataset.rows = JSON.stringify(rows.slice(1)); // Store original rows data, exclude header row
+    updateTotalRowCount(rows.length - 1);
+}
 
-                    localStorage.setItem('equipmentData', JSON.stringify(equipmentData));
-                    displayResults(equipmentData);
-                };
-                reader.readAsText(file);
-            } else {
-                alert('Please select a file.');
-            }
-        }
+function updateTotalRowCount(count) {
+    const rowCountElement = document.getElementById('rowCount');
+    rowCountElement.textContent = `Total Rows: ${count}`;
+}
 
-        function parseCSV(data) {
-            const lines = data.split('\n');
-            const headers = lines[0].split(',').map(header => header.trim());
-            const result = [];
+function updateVisibleRowCount(count) {
+    const visibleRowCountElement = document.getElementById('visibleRowCount');
+    if (visibleRowCountElement) {
+        visibleRowCountElement.textContent = `Visible Rows: ${count}`;
+    } else {
+        const div = document.createElement('div');
+        div.id = 'visibleRowCount';
+        div.textContent = `Visible Rows: ${count}`;
+        document.querySelector('.upload-container').appendChild(div);
+    }
+}
 
-            for (let i = 1; i < lines.length; i++) {
-                const currentLine = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                if (currentLine.every(cell => cell.trim() === '')) continue;
+function displayRowInNewWindow(row) {
+    const headers = [
+        "Serial Number", "UP#", "Make", "Office", "Modality", "Status", "Room", "Tech",
+        "Equipment", "Contract/Warranty Begin", "Contract/Warranty End Date", "Service Support",
+        "Support Phone#", "Support Email", "Service Annual Fee", "Note", "Purchase From",
+        "Purchase Date", "Delivery Date", "Install Date", "Remove By", "Remove Date", "Remove Description"
+    ];
+    const newWindow = window.open('', '_blank', 'width=600,height=800');
+    newWindow.document.write('<html><head><title>Row Details</title></head><body>');
+    newWindow.document.write('<div style="display: flex; flex-direction: column; gap: 10px;">');
+    row.forEach((cell, index) => {
+        newWindow.document.write(`<div><strong>${headers[index]}:</strong> ${cell}</div>`);
+    });
+    newWindow.document.write('</div>');
+    newWindow.document.write('</body></html>');
+}
 
-                const obj = {};
-                for (let j = 0; j < headers.length; j++) {
-                    let cellValue = currentLine[j] ? currentLine[j].trim() : '';
+document.querySelectorAll('.search-container input').forEach(input => {
+    input.addEventListener('input', filterTable);
+});
 
-                    if (headers[j] === 'Service Annual Fee') {
-                        cellValue = cellValue.replace(/[^0-9.,]/g, '');
-                        cellValue = `$${cellValue}`;
-                    }
-                    cellValue = cellValue.replace(/[^ -~]/g, '');
-                    if (cellValue.startsWith('"') && cellValue.endsWith('"')) {
-                        cellValue = cellValue.slice(1, -1);
-                    }
+function filterTable() {
+    const serialNumberValue = document.getElementById('serialNumberSearch').value.toLowerCase();
+    const makeValue = document.getElementById('makeSearch').value.toLowerCase();
+    const officeValue = document.getElementById('officeSearch').value.toLowerCase();
+    const modalityValue = document.getElementById('modalitySearch').value.toLowerCase();
 
-                    obj[headers[j]] = cellValue;
-                }
-                result.push(obj);
-            }
-            return result;
-        }
+    const rows = JSON.parse(document.getElementById('csvTable').dataset.rows);
+    let visibleRowCount = 0;
+    const tbody = document.querySelector('#csvTable tbody');
+    tbody.innerHTML = '';
 
-        function displayResults(data) {
-            const resultTable = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
-            resultTable.innerHTML = '';
-            data.forEach((item) => {
-                const row = resultTable.insertRow();
-                Object.entries(item).forEach(([key, val]) => {
-                    if (key !== 'contractFile') {
-                        const cell = row.insertCell();
-                        cell.textContent = val;
-                    }
-                });
+    rows.forEach((row) => {
+        const serialNumberMatch = row[0].toLowerCase().includes(serialNumberValue);
+        const makeMatch = row[2].toLowerCase().includes(makeValue);
+        const officeMatch = row[3].toLowerCase().includes(officeValue);
+        const modalityMatch = row[4].toLowerCase().includes(modalityValue);
+
+        if (serialNumberMatch && makeMatch && officeMatch && modalityMatch) {
+            const tr = document.createElement('tr');
+            row.forEach(cell => {
+                const td = document.createElement('td');
+                td.textContent = cell.trim(); // Ensure trimming of whitespace
+                tr.appendChild(td);
             });
-        }
-
-        function searchEquipment() {
-            const serialNumberQuery = document.getElementById('serialNumber').value.toLowerCase().trim();
-            const officeQuery = document.getElementById('office').value.toLowerCase().trim();
-            const modalityQuery = document.getElementById('modality').value.toLowerCase().trim();
-            const makeQuery = document.getElementById('make').value.toLowerCase().trim();
-
-            const filteredData = equipmentData.filter(item => {
-                return (serialNumberQuery === '' || item['Serial Number'].toLowerCase().includes(serialNumberQuery)) &&
-                       (officeQuery === '' || item['Office'].toLowerCase().includes(officeQuery)) &&
-                       (modalityQuery === '' || item['Modality'].toLowerCase().includes(modalityQuery)) &&
-                       (makeQuery === '' || item['Make'].toLowerCase().includes(makeQuery));
+            tr.addEventListener('click', function() {
+                displayRowInNewWindow(row);
             });
-
-            displayResults(filteredData);
+            tbody.appendChild(tr);
+            visibleRowCount++;
         }
-    </script>
-</body>
-</html>
+    });
+
+    updateVisibleRowCount(visibleRowCount); // Update count based on filtered rows
+}
+
+
+
+
+       
+                    
+                    
