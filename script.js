@@ -1,35 +1,38 @@
-document.getElementById('uploadButton').addEventListener('click', function() {
-    const fileInput = document.getElementById('fileInput');
-    const file = fileInput.files[0];
-    if (file) {
-        Papa.parse(file, {
-            complete: function(results) {
-                displayTable(results.data);
-                updateTotalRowCount(results.data.length - 1); // Update total count after uploading
-            }
-        });
-    }
+// Load CSV data from GitHub repository on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const csvUrl = 'https://raw.githubusercontent.com/your-username/your-repository-name/main/datable.csv';
+
+    Papa.parse(csvUrl, {
+        download: true,
+        header: true,
+        complete: function(results) {
+            displayTable(results.data);
+            updateTotalRowCount(results.data.length); // Update total count after loading
+        },
+        error: function(error) {
+            console.error('Error parsing CSV:', error);
+        }
+    });
 });
 
 function displayTable(rows) {
     const tbody = document.querySelector('#csvTable tbody');
     tbody.innerHTML = '';
     rows.forEach((row, index) => {
-        if (index === 0) return; // Skip header row
         const tr = document.createElement('tr');
-        row.forEach(cell => {
+        Object.values(row).forEach(cell => {
             const td = document.createElement('td');
-            td.textContent = cell.trim(); // Ensure trimming of whitespace
+            td.textContent = (cell || '').trim(); // Ensure trimming of whitespace
             tr.appendChild(td);
         });
         tr.addEventListener('click', function() {
-            displayRowInNewWindow(row);
+            displayRowInNewWindow(Object.values(row));
         });
         tbody.appendChild(tr);
     });
 
-    document.getElementById('csvTable').dataset.rows = JSON.stringify(rows.slice(1)); // Store original rows data, exclude header row
-    updateTotalRowCount(rows.length - 1);
+    document.getElementById('csvTable').dataset.rows = JSON.stringify(rows); // Store original rows data
+    updateTotalRowCount(rows.length);
 }
 
 function updateTotalRowCount(count) {
@@ -71,10 +74,10 @@ document.querySelectorAll('.search-container input').forEach(input => {
 });
 
 function filterTable() {
-    const serialNumberValue = document.getElementById('serialNumberSearch').value.toLowerCase();
-    const makeValue = document.getElementById('makeSearch').value.toLowerCase();
-    const officeValue = document.getElementById('officeSearch').value.toLowerCase();
-    const modalityValue = document.getElementById('modalitySearch').value.toLowerCase();
+    const serialNumberValue = document.getElementById('serialNumber').value.toLowerCase();
+    const makeValue = document.getElementById('make').value.toLowerCase();
+    const officeValue = document.getElementById('office').value.toLowerCase();
+    const modalityValue = document.getElementById('modality').value.toLowerCase();
 
     const rows = JSON.parse(document.getElementById('csvTable').dataset.rows);
     let visibleRowCount = 0;
@@ -82,20 +85,20 @@ function filterTable() {
     tbody.innerHTML = '';
 
     rows.forEach((row) => {
-        const serialNumberMatch = row[0].toLowerCase().includes(serialNumberValue);
-        const makeMatch = row[2].toLowerCase().includes(makeValue);
-        const officeMatch = row[3].toLowerCase().includes(officeValue);
-        const modalityMatch = row[4].toLowerCase().includes(modalityValue);
+        const serialNumberMatch = row["Serial Number"].toLowerCase().includes(serialNumberValue);
+        const makeMatch = row["Make"].toLowerCase().includes(makeValue);
+        const officeMatch = row["Office"].toLowerCase().includes(officeValue);
+        const modalityMatch = row["Modality"].toLowerCase().includes(modalityValue);
 
         if (serialNumberMatch && makeMatch && officeMatch && modalityMatch) {
             const tr = document.createElement('tr');
-            row.forEach(cell => {
+            Object.values(row).forEach(cell => {
                 const td = document.createElement('td');
-                td.textContent = cell.trim(); // Ensure trimming of whitespace
+                td.textContent = (cell || '').trim(); // Ensure trimming of whitespace
                 tr.appendChild(td);
             });
             tr.addEventListener('click', function() {
-                displayRowInNewWindow(row);
+                displayRowInNewWindow(Object.values(row));
             });
             tbody.appendChild(tr);
             visibleRowCount++;
@@ -105,6 +108,7 @@ function filterTable() {
     updateVisibleRowCount(visibleRowCount); // Update count based on filtered rows
 }
 
+              
 
 
 
