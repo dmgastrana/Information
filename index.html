@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,7 +9,7 @@
             font-family: Arial, sans-serif;
         }
 
-        .search-container, .upload-container {
+        .search-container {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -73,96 +73,24 @@
             max-width: 600px;
         }
     </style>
-</head>
-<body>
-    <div class="search-container">
-        <input type="text" id="serialNumber" placeholder="Search by Serial Number" onkeyup="searchEquipment()">
-        <input type="text" id="office" placeholder="Search by Office" onkeyup="searchEquipment()">
-        <input type="text" id="modality" placeholder="Search by Modality" onkeyup="searchEquipment()">
-        <input type="text" id="make" placeholder="Search by Make" onkeyup="searchEquipment()">
-    </div>
-    
-    <div class="upload-container">
-        <h1>Upload Data</h1>
-        <input type="file" id="fileInput">
-        <button onclick="readFile()">Upload</button>
-        <pre id="output"></pre>
-    </div>
-
-    <table id="resultTable" class="result">
-        <thead>
-            <tr>
-                <th>Serial Number</th>
-                <th>UP#</th>
-                <th>Make</th>
-                <th>Office</th>
-                <th>Modality</th>
-                <th>Status</th>
-                <th>Room</th>
-                <th>Tech</th>
-                <th>Equipment</th>
-                <th>Contract/Warranty Begin</th>
-                <th>Contract/Warranty End Date</th>
-                <th>Service Support</th>
-                <th>Support Phone#</th>
-                <th>Support Email</th>
-                <th>Coverage Days left</th>
-                <th>Service Annual Fee</th>
-                <th>Note</th>
-                <th>Purchase From</th>
-                <th>Purchase Date</th>
-                <th>Delivery Date</th>
-                <th>Install Date</th>
-                <th>Remove By</th>
-                <th>Remove Date</th>
-                <th>Remove Description</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script>
         let equipmentData = [];
 
-        // Load data from local storage on page load
+        // Load CSV data from GitHub repository on page load
         document.addEventListener('DOMContentLoaded', () => {
-            const storedData = localStorage.getItem('equipmentData');
-            if (storedData) {
-                equipmentData = JSON.parse(storedData);
-                displayResults(equipmentData);
-            }
-        });
+            const csvUrl = 'https://raw.githubusercontent.com/your-username/your-repository-name/main/datable.csv';
 
-        function readFile() {
-            const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
-            
-            console.log('File selected:', file);
-
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const csvData = event.target.result;
-                    console.log('CSV Data:', csvData);
-
-                    const newData = parseCSV(csvData);
-                    console.log('Parsed Data:', newData);
-
-                    equipmentData = [...equipmentData, ...newData];
-                    console.log('Updated Equipment Data:', equipmentData);
-
+            Papa.parse(csvUrl, {
+                download: true,
+                header: true,
+                complete: function(results) {
+                    equipmentData = results.data;
                     localStorage.setItem('equipmentData', JSON.stringify(equipmentData));
-
                     displayResults(equipmentData);
-                };
-                reader.onerror = function(event) {
-                    console.error('File read error:', event);
-                };
-                reader.readAsText(file);
-            } else {
-                alert('Please select a file.');
-            }
-        }
+                }
+            });
+        });
 
         function parseCSV(data) {
             const lines = data.split('\n');
@@ -255,7 +183,6 @@
             displayResults(filteredData); // Display filtered results
         }
 
-        
         function openEditWindow(index) {
             const rowData = equipmentData[index];
             const headers = Object.keys(rowData);
@@ -269,4 +196,11 @@
             });
             editWindow.document.write('<button type="button" onclick="window.opener.saveEditForm()">Save</button>');
             editWindow.document.write('</form>');
-            editWindow.document.write('</body></html
+            editWindow.document.write('</body></html>');
+        }
+    </script>
+</body>
+</html>
+
+           
+        
