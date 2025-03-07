@@ -75,11 +75,18 @@
 
         .vertical-view {
             display: none;
-            margin: 20px;
-            padding: 10px;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            background-color: #f9f9f9;
+            background-color: #fff;
+            z-index: 1000;
+            width: 80%;
+            max-height: 80%;
+            overflow: auto;
         }
 
         .vertical-view table {
@@ -97,9 +104,27 @@
             background-color: #f2f2f2;
         }
 
-        /* Hide content by default */
+        .vertical-view .close {
+            cursor: pointer;
+            color: red;
+            float: right;
+            font-size: 18px;
+            margin-top: -15px;
+        }
+
         .hidden {
             display: none;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
         }
     </style>
 </head>
@@ -144,12 +169,16 @@
             <tbody></tbody>
         </table>
         <div id="rowCount"></div>
-        <div class="vertical-view" id="verticalView">
-            <table>
-                <tbody id="verticalData"></tbody>
-            </table>
-        </div>
     </div>
+
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="vertical-view" id="verticalView">
+        <span class="close" id="closeModal">&times;</span>
+        <table>
+            <tbody id="verticalData"></tbody>
+        </table>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script src="script.js"></script>
     <script>
@@ -162,9 +191,12 @@
         } else {
             document.body.innerHTML = "Access denied.";
         }
+
+        // Close modal function
+        document.getElementById("closeModal").addEventListener("click", function () {
+            document.getElementById("verticalView").style.display = "none";
+            document.getElementById("modalOverlay").style.display = "none";
+        });
     </script>
 </body>
 </html>
-
-
-                           
