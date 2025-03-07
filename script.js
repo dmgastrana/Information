@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', () => {
     const csvUrl = 'https://raw.githubusercontent.com/dmgastrana/Information/main/datatable.csv';
     let equipmentData = [];
@@ -38,14 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     cell.setAttribute('tabindex', '0');
                 }
             });
+
+            row.addEventListener("click", handleRowClick); // Add click event listener to each row
         });
 
         updateTotalRowCount(data.length); // Update total row count
-
-        // Adding event listeners to table rows
-        document.querySelectorAll("#resultTable tbody tr").forEach((row) => {
-            row.addEventListener("click", handleRowClick);
-        });
     }
 
     function updateTotalRowCount(count) {
@@ -108,4 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById("verticalView").style.display = "block";
     }
-});
+
+
+   
