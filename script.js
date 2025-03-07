@@ -104,6 +104,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.getElementById("verticalView").style.display = "block";
+        document.getElementById("modalOverlay").style.display = "block";
     }
-}); 
 
+    // Close modal function
+    document.getElementById("closeModal").addEventListener("click", function () {
+        document.getElementById("verticalView").style.display = "none";
+        document.getElementById("modalOverlay").style.display = "none";
+    });
+});
