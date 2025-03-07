@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     const csvUrl = 'https://raw.githubusercontent.com/dmgastrana/Information/main/datatable.csv';
     let equipmentData = [];
@@ -106,6 +105,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById("verticalView").style.display = "block";
     }
+}); 
 
-
-   
