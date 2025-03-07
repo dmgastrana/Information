@@ -96,20 +96,15 @@
         .vertical-view th {
             background-color: #f2f2f2;
         }
+
+        /* Hide content by default */
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <script type="text/javascript">
-        var password = "dmg1129"; // Replace 'dmg1129' with your desired password
-        var enteredPassword = prompt("Please enter the password:");
-
-        if (enteredPassword !== password) {
-            document.body.innerHTML = "Access denied.";
-        } else {
-            document.getElementById("content").style.display = "block";
-        }
-    </script>
-    <div id="content" style="display: none;">
+    <div id="content" class="hidden">
         <div class="search-container">
             <input type="text" id="serialNumber" placeholder="Search by Serial Number">
             <input type="text" id="office" placeholder="Search by Office">
@@ -157,9 +152,19 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script src="script.js"></script>
+    <script>
+        // Password protection
+        var password = "dmg1129"; // Replace 'dmg1129' with your desired password
+        var enteredPassword = prompt("Please enter the password:");
+
+        if (enteredPassword === password) {
+            document.getElementById("content").classList.remove("hidden");
+        } else {
+            document.body.innerHTML = "Access denied.";
+        }
+    </script>
 </body>
 </html>
 
-            
-     
+
                            
