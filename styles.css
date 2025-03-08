@@ -125,7 +125,7 @@ body {
 }
 
 /* Style for "Office" row to be in blue text */
-.vertical-view td.office-column {
+.vertical-view .office-row td {
     color: blue;
 }
 
