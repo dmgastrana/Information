@@ -91,9 +91,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const dataText = data[index].textContent;
 
             verticalDataContainer.innerHTML += `
-                <tr>
+                <tr class="${headerText === 'Office' ? 'office-row' : ''}">
                     <th>${headerText}</th>
-                    <td class="${headerText === 'Office' ? 'office-column' : ''}">${dataText}</td>
+                    <td>${dataText}</td>
                 </tr>
             `;
         });
