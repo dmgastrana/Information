@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
             verticalDataContainer.innerHTML += `
                 <tr>
                     <th>${headerText}</th>
-                    <td>${dataText}</td>
+                    <td class="${headerText === 'Office' ? 'office-column' : ''}">${dataText}</td>
                 </tr>
             `;
         });
@@ -108,3 +108,5 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("modalOverlay").style.display = "none";
     });
 });
+
+                 
