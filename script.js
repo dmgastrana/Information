@@ -54,16 +54,11 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Filtering table'); // Debug: Log when filtering starts
 
         const serialNumberValue = document.getElementById('serialNumber').value.toLowerCase();
-        console.log('Serial Number filter:', serialNumberValue); // Debug: Log the value
-
         const makeValue = document.getElementById('make').value.toLowerCase();
-        console.log('Make filter:', makeValue); // Debug: Log the value
-
         const officeValue = document.getElementById('office').value.toLowerCase();
-        console.log('Office filter:', officeValue); // Debug: Log the value
-
         const modalityValue = document.getElementById('modality').value.toLowerCase();
-        console.log('Modality filter:', modalityValue); // Debug: Log the value
+
+        console.log('Filter values:', serialNumberValue, makeValue, officeValue, modalityValue); // Debug: Log filter values
 
         const filteredData = equipmentData.filter(item => {
             console.log('Checking item:', item); // Debug: Log each item being checked
@@ -113,3 +108,4 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("modalOverlay").style.display = "none";
     });
 });
+
