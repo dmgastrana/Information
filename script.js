@@ -63,10 +63,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const filteredData = equipmentData.filter(item => {
             console.log('Checking item:', item); // Debug: Log each item being checked
 
-            const serialNumberMatch = item['Serial Number'].toLowerCase().includes(serialNumberValue);
-            const makeMatch = item['Make'].toLowerCase().includes(makeValue);
-            const officeMatch = item['Office'].toLowerCase().includes(officeValue);
-            const modalityMatch = item['Modality'].toLowerCase().includes(modalityValue);
+            const serialNumberMatch = item['Serial Number'] ? item['Serial Number'].toLowerCase().includes(serialNumberValue) : false;
+            const makeMatch = item['Make'] ? item['Make'].toLowerCase().includes(makeValue) : false;
+            const officeMatch = item['Office'] ? item['Office'].toLowerCase().includes(officeValue) : false;
+            const modalityMatch = item['Modality'] ? item['Modality'].toLowerCase().includes(modalityValue) : false;
 
             console.log('Matches:', serialNumberMatch, makeMatch, officeMatch, modalityMatch); // Debug: Log match results
 
@@ -108,4 +108,3 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("modalOverlay").style.display = "none";
     });
 });
-
