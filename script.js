@@ -9,7 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
         header: true,
         complete: function(results) {
             console.log('Parsed CSV data:', results.data); // Log the parsed data
-            equipmentData = results.data;
+            equipmentData = results.data.map(item => {
+                item['Coverage Days Left'] = calculateCoverageDaysLeft(item['Contract/Warranty End Date']);
+                return item;
+            });
             localStorage.setItem('equipmentData', JSON.stringify(equipmentData));
             displayResults(equipmentData);
         },
@@ -18,10 +21,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Add event listeners to search input fields
-    document.querySelectorAll('.search-container input').forEach(input => {
-        input.addEventListener('input', filterTable);
-    });
+    function calculateCoverageDaysLeft(endDate) {
+        const endDateObj = new Date(endDate);
+        const today = new Date();
+        const timeDiff = endDateObj - today;
+        const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
+
+        return daysDiff > 0 ? daysDiff : 0; // If negative, return 0
+    }
 
     function displayResults(data) {
         console.log('Displaying results:', data); // Log the data to be displayed
@@ -108,3 +115,5 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("modalOverlay").style.display = "none";
     });
 });
+
+     
