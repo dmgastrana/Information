@@ -10,7 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
         complete: function(results) {
             console.log('Parsed CSV data:', results.data); // Log the parsed data
             equipmentData = results.data.map(item => {
-                item['Coverage Days Left'] = calculateCoverageDaysLeft(item['Contract/Warranty End Date']);
+                const coverageDaysLeft = calculateCoverageDaysLeft(item['Contract/Warranty End Date']);
+                console.log(`Item: ${item['Contract/Warranty End Date']}, Coverage Days Left: ${coverageDaysLeft}`);
+                item['Coverage Days Left'] = coverageDaysLeft;
                 return item;
             });
             console.log('Updated equipment data:', equipmentData); // Debug: Log updated data
@@ -22,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Function to parse date in MM/DD/YYYY format
     function parseDate(dateString) {
         const parts = dateString.split('/');
         const month = parseInt(parts[0], 10) - 1; // Months are zero-based in JS Date
@@ -31,10 +32,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return new Date(year, month, day);
     }
 
-    // Function to calculate coverage days left
     function calculateCoverageDaysLeft(endDate) {
         console.log('Calculating coverage days left for:', endDate); // Debug: Log end date
+        if (!endDate) return 'Invalid date'; // Handle missing dates
         const endDateObj = parseDate(endDate);
+        if (isNaN(endDateObj)) return 'Invalid date'; // Handle invalid dates
         const today = new Date();
         const timeDiff = endDateObj - today;
         const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
@@ -43,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return daysDiff > 0 ? daysDiff : 0; // If negative, return 0
     }
 
-    // Function to display results in the table
     function displayResults(data) {
         console.log('Displaying results:', data); // Log the data to be displayed
         const resultTable = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
@@ -53,11 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
         data.forEach((item) => {
             const row = resultTable.insertRow();
             Object.entries(item).forEach(([key, val]) => {
-                if (key !== 'contractFile') {
-                    const cell = row.insertCell();
-                    cell.textContent = val;
-                    cell.setAttribute('tabindex', '0');
-                }
+                const cell = row.insertCell();
+                cell.textContent = val;
+                cell.setAttribute('tabindex', '0');
             });
 
             row.addEventListener("click", handleRowClick); // Add click event listener to each row
@@ -66,13 +65,11 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTotalRowCount(data.length); // Update total row count
     }
 
-    // Function to update the total row count display
     function updateTotalRowCount(count) {
         const rowCountElement = document.getElementById('rowCount');
         rowCountElement.textContent = `Total Rows: ${count}`;
     }
 
-    // Function to filter table based on search input values
     function filterTable() {
         console.log('Filtering table'); // Debug: Log when filtering starts
 
@@ -101,7 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
         displayResults(filteredData);
     }
 
-    // Function to handle row click event and display data in vertical view
     function handleRowClick(event) {
         const row = event.target.closest("tr");
         const headers = Array.from(document.querySelectorAll("#resultTable th"));
@@ -132,3 +128,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("modalOverlay").style.display = "none";
     });
 });
+
+        
+
+   
+        
