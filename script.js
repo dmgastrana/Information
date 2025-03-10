@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 item['Coverage Days Left'] = calculateCoverageDaysLeft(item['Contract/Warranty End Date']);
                 return item;
             });
+            console.log('Updated equipment data:', equipmentData); // Debug: Log updated data
             localStorage.setItem('equipmentData', JSON.stringify(equipmentData));
             displayResults(equipmentData);
         },
@@ -21,12 +22,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    function parseDate(dateString) {
+        const parts = dateString.split('/');
+        const month = parseInt(parts[0], 10) - 1; // Months are zero-based in JS Date
+        const day = parseInt(parts[1], 10);
+        const year = parseInt(parts[2], 10);
+        return new Date(year, month, day);
+    }
+
     function calculateCoverageDaysLeft(endDate) {
-        const endDateObj = new Date(endDate);
+        console.log('Calculating coverage days left for:', endDate); // Debug: Log end date
+        const endDateObj = parseDate(endDate);
         const today = new Date();
         const timeDiff = endDateObj - today;
         const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
 
+        console.log('Coverage days left:', daysDiff); // Debug: Log coverage days left
         return daysDiff > 0 ? daysDiff : 0; // If negative, return 0
     }
 
@@ -116,4 +127,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+          
      
