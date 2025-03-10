@@ -10,9 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
         complete: function(results) {
             console.log('Parsed CSV data:', results.data); // Log the parsed data
             equipmentData = results.data.map(item => {
-                const coverageDaysLeft = calculateCoverageDaysLeft(item['Contract/Warranty End Date']);
-                console.log(`Item: ${item['Contract/Warranty End Date']}, Coverage Days Left: ${coverageDaysLeft}`);
-                item['Coverage Days Left'] = coverageDaysLeft;
+                if (item['Contract/Warranty End Date']) {
+                    item['Coverage Days Left'] = calculateCoverageDaysLeft(item['Contract/Warranty End Date']);
+                } else {
+                    item['Coverage Days Left'] = 'N/A';
+                }
                 return item;
             });
             console.log('Updated equipment data:', equipmentData); // Debug: Log updated data
@@ -34,9 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function calculateCoverageDaysLeft(endDate) {
         console.log('Calculating coverage days left for:', endDate); // Debug: Log end date
-        if (!endDate) return 'Invalid date'; // Handle missing dates
         const endDateObj = parseDate(endDate);
-        if (isNaN(endDateObj)) return 'Invalid date'; // Handle invalid dates
+        if (isNaN(endDateObj)) {
+            console.error('Invalid date:', endDate);
+            return 'Invalid date';
+        }
         const today = new Date();
         const timeDiff = endDateObj - today;
         const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
@@ -54,9 +58,11 @@ document.addEventListener('DOMContentLoaded', () => {
         data.forEach((item) => {
             const row = resultTable.insertRow();
             Object.entries(item).forEach(([key, val]) => {
-                const cell = row.insertCell();
-                cell.textContent = val;
-                cell.setAttribute('tabindex', '0');
+                if (key !== 'contractFile') {
+                    const cell = row.insertCell();
+                    cell.textContent = val;
+                    cell.setAttribute('tabindex', '0');
+                }
             });
 
             row.addEventListener("click", handleRowClick); // Add click event listener to each row
@@ -129,7 +135,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-        
-
-   
-        
+    
+      
