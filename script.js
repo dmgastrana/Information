@@ -2,24 +2,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const csvUrl = 'https://raw.githubusercontent.com/dmgastrana/Information/main/datatable.csv';
     let equipmentData = [];
 
-    console.log('Fetching CSV from URL:', csvUrl);
+    console.log('Fetching CSV from URL:', csvUrl); // Log the URL
 
     Papa.parse(csvUrl, {
         download: true,
         header: true,
         complete: function(results) {
-            console.log('Parsed CSV data:', results.data);
-            equipmentData = results.data.map(item => {
-                if (item['Contract/Warranty End Date']) {
-                    const coverageDaysLeft = calculateCoverageDaysLeft(item['Contract/Warranty End Date']);
-                    console.log(`End Date: ${item['Contract/Warranty End Date']}, Coverage Days Left: ${coverageDaysLeft}`);
-                    item['Coverage Days Left'] = coverageDaysLeft;
-                } else {
-                    item['Coverage Days Left'] = 'N/A';
-                }
-                return item;
-            });
-            console.log('Updated equipment data:', equipmentData);
+            console.log('Parsed CSV data:', results.data); // Log the parsed data
+            equipmentData = results.data;
             localStorage.setItem('equipmentData', JSON.stringify(equipmentData));
             displayResults(equipmentData);
         },
@@ -28,32 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function parseDate(dateString) {
-        const parts = dateString.split('/');
-        const month = parseInt(parts[0], 10) - 1;
-        const day = parseInt(parts[1], 10);
-        const year = parseInt(parts[2], 10);
-        const parsedDate = new Date(year, month, day);
-        console.log('Parsed date:', parsedDate);
-        return parsedDate;
-    }
-
-    function calculateCoverageDaysLeft(endDate) {
-        console.log('Calculating coverage days left for:', endDate);
-        const endDateObj = parseDate(endDate);
-        if (isNaN(endDateObj)) {
-            console.error('Invalid date:', endDate);
-            return 'Invalid date';
-        }
-        const today = new Date();
-        const timeDiff = endDateObj - today;
-        const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-        console.log('Coverage days left:', daysDiff);
-        return daysDiff > 0 ? daysDiff : 0;
-    }
+    // Add event listeners to search input fields
+    document.querySelectorAll('.search-container input').forEach(input => {
+        input.addEventListener('input', filterTable);
+    });
 
     function displayResults(data) {
-        console.log('Displaying results:', data);
+        console.log('Displaying results:', data); // Log the data to be displayed
         const resultTable = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
 
         resultTable.innerHTML = '';
@@ -61,14 +32,17 @@ document.addEventListener('DOMContentLoaded', () => {
         data.forEach((item) => {
             const row = resultTable.insertRow();
             Object.entries(item).forEach(([key, val]) => {
-                const cell = row.insertCell();
-                cell.textContent = val;
-                cell.setAttribute('tabindex', '0');
+                if (key !== 'contractFile') {
+                    const cell = row.insertCell();
+                    cell.textContent = val;
+                    cell.setAttribute('tabindex', '0');
+                }
             });
-            row.addEventListener("click", handleRowClick);
+
+            row.addEventListener("click", handleRowClick); // Add click event listener to each row
         });
 
-        updateTotalRowCount(data.length);
+        updateTotalRowCount(data.length); // Update total row count
     }
 
     function updateTotalRowCount(count) {
@@ -77,21 +51,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function filterTable() {
-        console.log('Filtering table');
+        console.log('Filtering table'); // Debug: Log when filtering starts
 
         const serialNumberValue = document.getElementById('serialNumber').value.toLowerCase();
         const makeValue = document.getElementById('make').value.toLowerCase();
         const officeValue = document.getElementById('office').value.toLowerCase();
         const modalityValue = document.getElementById('modality').value.toLowerCase();
 
+        console.log('Filter values:', serialNumberValue, makeValue, officeValue, modalityValue); // Debug: Log filter values
+
         const filteredData = equipmentData.filter(item => {
+            console.log('Checking item:', item); // Debug: Log each item being checked
+
             const serialNumberMatch = item['Serial Number'] && item['Serial Number'].toLowerCase().includes(serialNumberValue);
             const makeMatch = item['Make'] && item['Make'].toLowerCase().includes(makeValue);
             const officeMatch = item['Office'] && item['Office'].toLowerCase().includes(officeValue);
             const modalityMatch = item['Modality'] && item['Modality'].toLowerCase().includes(modalityValue);
 
+            console.log('Matches:', serialNumberMatch, makeMatch, officeMatch, modalityMatch); // Debug: Log match results
+
             return serialNumberMatch && makeMatch && officeMatch && modalityMatch;
         });
+
+        console.log('Filtered data:', filteredData); // Debug: Log the filtered data
 
         displayResults(filteredData);
     }
@@ -120,17 +102,13 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("modalOverlay").style.display = "block";
     }
 
+    // Close modal function
     document.getElementById("closeModal").addEventListener("click", function () {
         document.getElementById("verticalView").style.display = "none";
         document.getElementById("modalOverlay").style.display = "none";
     });
-
-    document.querySelectorAll('.search-container input').forEach(input => {
-        input.addEventListener('input', filterTable);
-    });
 });
 
     
- 
 
-   
+           
