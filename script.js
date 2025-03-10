@@ -10,11 +10,15 @@ document.addEventListener('DOMContentLoaded', () => {
         complete: function(results) {
             console.log('Parsed CSV data:', results.data); // Log the parsed data
             equipmentData = results.data.map(item => {
+                console.log('Original item:', item);
                 if (item['Contract/Warranty End Date']) {
-                    item['Coverage Days Left'] = calculateCoverageDaysLeft(item['Contract/Warranty End Date']);
+                    const coverageDaysLeft = calculateCoverageDaysLeft(item['Contract/Warranty End Date']);
+                    console.log(`Item: ${item['Contract/Warranty End Date']}, Coverage Days Left: ${coverageDaysLeft}`);
+                    item['Coverage Days Left'] = coverageDaysLeft;
                 } else {
                     item['Coverage Days Left'] = 'N/A';
                 }
+                console.log('Updated item:', item);
                 return item;
             });
             console.log('Updated equipment data:', equipmentData); // Debug: Log updated data
@@ -56,13 +60,12 @@ document.addEventListener('DOMContentLoaded', () => {
         resultTable.innerHTML = '';
 
         data.forEach((item) => {
+            console.log('Displaying item:', item);
             const row = resultTable.insertRow();
             Object.entries(item).forEach(([key, val]) => {
-                if (key !== 'contractFile') {
-                    const cell = row.insertCell();
-                    cell.textContent = val;
-                    cell.setAttribute('tabindex', '0');
-                }
+                const cell = row.insertCell();
+                cell.textContent = val;
+                cell.setAttribute('tabindex', '0');
             });
 
             row.addEventListener("click", handleRowClick); // Add click event listener to each row
@@ -135,5 +138,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-    
-      
+        
+   
