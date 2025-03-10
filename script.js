@@ -10,18 +10,18 @@ document.addEventListener('DOMContentLoaded', () => {
         complete: function(results) {
             console.log('Parsed CSV data:', results.data); // Log the parsed data
             equipmentData = results.data.map(item => {
-                console.log('Original item:', item);
+                console.log('Original item:', item); // Log original item
                 if (item['Contract/Warranty End Date']) {
                     const coverageDaysLeft = calculateCoverageDaysLeft(item['Contract/Warranty End Date']);
-                    console.log(`Item: ${item['Contract/Warranty End Date']}, Coverage Days Left: ${coverageDaysLeft}`);
+                    console.log(`Item: ${item['Contract/Warranty End Date']}, Coverage Days Left: ${coverageDaysLeft}`); // Log calculated days
                     item['Coverage Days Left'] = coverageDaysLeft;
                 } else {
                     item['Coverage Days Left'] = 'N/A';
                 }
-                console.log('Updated item:', item);
+                console.log('Updated item:', item); // Log updated item
                 return item;
             });
-            console.log('Updated equipment data:', equipmentData); // Debug: Log updated data
+            console.log('Updated equipment data:', equipmentData); // Log updated data
             localStorage.setItem('equipmentData', JSON.stringify(equipmentData));
             displayResults(equipmentData);
         },
@@ -35,21 +35,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const month = parseInt(parts[0], 10) - 1; // Months are zero-based in JS Date
         const day = parseInt(parts[1], 10);
         const year = parseInt(parts[2], 10);
-        return new Date(year, month, day);
+        const parsedDate = new Date(year, month, day);
+        console.log('Parsed date:', parsedDate); // Log parsed date
+        return parsedDate;
     }
 
     function calculateCoverageDaysLeft(endDate) {
-        console.log('Calculating coverage days left for:', endDate); // Debug: Log end date
+        console.log('Calculating coverage days left for:', endDate); // Log end date
         const endDateObj = parseDate(endDate);
         if (isNaN(endDateObj)) {
-            console.error('Invalid date:', endDate);
+            console.error('Invalid date:', endDate); // Log invalid date
             return 'Invalid date';
         }
         const today = new Date();
         const timeDiff = endDateObj - today;
         const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
 
-        console.log('Coverage days left:', daysDiff); // Debug: Log coverage days left
+        console.log('Coverage days left:', daysDiff); // Log coverage days left
         return daysDiff > 0 ? daysDiff : 0; // If negative, return 0
     }
 
@@ -60,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resultTable.innerHTML = '';
 
         data.forEach((item) => {
-            console.log('Displaying item:', item);
+            console.log('Displaying item:', item); // Log each item being displayed
             const row = resultTable.insertRow();
             Object.entries(item).forEach(([key, val]) => {
                 const cell = row.insertCell();
@@ -80,29 +82,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function filterTable() {
-        console.log('Filtering table'); // Debug: Log when filtering starts
+        console.log('Filtering table'); // Log when filtering starts
 
         const serialNumberValue = document.getElementById('serialNumber').value.toLowerCase();
         const makeValue = document.getElementById('make').value.toLowerCase();
         const officeValue = document.getElementById('office').value.toLowerCase();
         const modalityValue = document.getElementById('modality').value.toLowerCase();
 
-        console.log('Filter values:', serialNumberValue, makeValue, officeValue, modalityValue); // Debug: Log filter values
+        console.log('Filter values:', serialNumberValue, makeValue, officeValue, modalityValue); // Log filter values
 
         const filteredData = equipmentData.filter(item => {
-            console.log('Checking item:', item); // Debug: Log each item being checked
+            console.log('Checking item:', item); // Log each item being checked
 
             const serialNumberMatch = item['Serial Number'] && item['Serial Number'].toLowerCase().includes(serialNumberValue);
             const makeMatch = item['Make'] && item['Make'].toLowerCase().includes(makeValue);
             const officeMatch = item['Office'] && item['Office'].toLowerCase().includes(officeValue);
             const modalityMatch = item['Modality'] && item['Modality'].toLowerCase().includes(modalityValue);
 
-            console.log('Matches:', serialNumberMatch, makeMatch, officeMatch, modalityMatch); // Debug: Log match results
+            console.log('Matches:', serialNumberMatch, makeMatch, officeMatch, modalityMatch); // Log match results
 
             return serialNumberMatch && makeMatch && officeMatch && modalityMatch;
         });
 
-        console.log('Filtered data:', filteredData); // Debug: Log the filtered data
+        console.log('Filtered data:', filteredData); // Log filtered data
 
         displayResults(filteredData);
     }
@@ -138,5 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-        
+  
+
    
