@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     console.log('Fetching CSV from URL:', csvUrl); // Log the URL
 
+    // Parse CSV data
     Papa.parse(csvUrl, {
         download: true,
         header: true,
@@ -23,14 +24,17 @@ document.addEventListener('DOMContentLoaded', () => {
         input.addEventListener('input', filterTable);
     });
 
+    // Display results function
     function displayResults(data) {
         console.log('Displaying results:', data); // Log the data to be displayed
         const resultTable = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
 
-        resultTable.innerHTML = '';
+        resultTable.innerHTML = ''; // Clear previous rows
 
+        // Populate table with data
         data.forEach((item) => {
             const row = resultTable.insertRow();
+
             Object.entries(item).forEach(([key, val]) => {
                 if (key !== 'contractFile') {
                     const cell = row.insertCell();
@@ -40,16 +44,16 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Add Coverage Days Left Calculation
-            const beginDate = new Date(item['Contract/Warranty Begin']);
-            const endDate = new Date(item['Contract/Warranty End']);
-            const coverageCell = row.insertCell();
+            const beginDate = item['Contract/Warranty Begin'] ? new Date(item['Contract/Warranty Begin'].trim()) : null;
+            const endDate = item['Contract/Warranty End'] ? new Date(item['Contract/Warranty End'].trim()) : null;
+            const coverageCell = row.insertCell(); // Add a new cell for "Coverage Days left"
 
-            if (!isNaN(beginDate) && !isNaN(endDate)) {
+            if (beginDate && endDate && !isNaN(beginDate) && !isNaN(endDate)) {
                 const differenceInTime = endDate - beginDate;
                 const differenceInDays = Math.ceil(differenceInTime / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
-                coverageCell.textContent = differenceInDays;
+                coverageCell.textContent = differenceInDays; // Set calculated value
             } else {
-                coverageCell.textContent = ''; // Leave empty if dates are invalid
+                coverageCell.textContent = 'N/A'; // Display "N/A" if dates are missing or invalid
             }
 
             row.addEventListener("click", handleRowClick); // Add click event listener to each row
@@ -58,11 +62,13 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTotalRowCount(data.length); // Update total row count
     }
 
+    // Update total row count
     function updateTotalRowCount(count) {
         const rowCountElement = document.getElementById('rowCount');
         rowCountElement.textContent = `Total Rows: ${count}`;
     }
 
+    // Filter table based on search inputs
     function filterTable() {
         console.log('Filtering table'); // Debug: Log when filtering starts
 
@@ -91,6 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         displayResults(filteredData);
     }
 
+    // Handle row click for modal display
     function handleRowClick(event) {
         const row = event.target.closest("tr");
         const headers = Array.from(document.querySelectorAll("#resultTable th"));
