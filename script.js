@@ -39,6 +39,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
+            // Add Coverage Days Left Calculation
+            const beginDate = new Date(item['Contract/Warranty Begin']);
+            const endDate = new Date(item['Contract/Warranty End']);
+            const coverageCell = row.insertCell();
+
+            if (!isNaN(beginDate) && !isNaN(endDate)) {
+                const differenceInTime = endDate - beginDate;
+                const differenceInDays = Math.ceil(differenceInTime / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
+                coverageCell.textContent = differenceInDays;
+            } else {
+                coverageCell.textContent = ''; // Leave empty if dates are invalid
+            }
+
             row.addEventListener("click", handleRowClick); // Add click event listener to each row
         });
 
