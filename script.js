@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Add Coverage Days Left Calculation
             const beginDate = item['Contract/Warranty Begin'] ? new Date(item['Contract/Warranty Begin'].trim()) : null;
-            const endDate = item['Contract/Warranty End'] ? new Date(item['Contract/Warranty End'].trim()) : null;
+            const endDate = item['Contract/Warranty End Date'] ? new Date(item['Contract/Warranty End Date'].trim()) : null;
             const coverageCell = row.insertCell(); // Add a new cell for "Coverage Days left"
 
             if (beginDate && endDate && !isNaN(beginDate) && !isNaN(endDate)) {
@@ -129,6 +129,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-    
 
            
