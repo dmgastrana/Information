@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     console.log('Fetching CSV from URL:', csvUrl);
 
+    // Parse CSV data
     Papa.parse(csvUrl, {
         download: true,
         header: true,
@@ -36,13 +37,17 @@ document.addEventListener('DOMContentLoaded', () => {
             // Add Coverage Days Calculation
             const beginDate = item['Contract/Warranty Begin'] ? new Date(item['Contract/Warranty Begin'].trim()) : null;
             const endDate = item['Contract/Warranty End Date'] ? new Date(item['Contract/Warranty End Date'].trim()) : null;
-            const coverageCell = row.insertCell();
+            const coverageCell = row.insertCell(); // Add a new cell for "Coverage Days left"
+
+            console.log('Begin Date:', beginDate, 'End Date:', endDate);
 
             if (beginDate && endDate && !isNaN(beginDate) && !isNaN(endDate)) {
                 const differenceInTime = endDate - beginDate;
                 const differenceInDays = Math.ceil(differenceInTime / (1000 * 60 * 60 * 24));
+                console.log('Coverage Days:', differenceInDays);
                 coverageCell.textContent = differenceInDays; // Display calculated value
             } else {
+                console.log('Invalid or missing dates, skipping calculation.');
                 coverageCell.textContent = 'N/A'; // Display 'N/A' if dates are missing/invalid
             }
         });
@@ -77,5 +82,3 @@ document.addEventListener('DOMContentLoaded', () => {
         displayResults(filteredData);
     }
 });
-
-           
