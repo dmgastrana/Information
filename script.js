@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Displaying results:', data); // Log the data to be displayed
         const resultTable = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
 
-        resultTable.innerHTML = '';
+        resultTable.innerHTML = ''; // Clear previous rows
 
         data.forEach((item) => {
             const row = resultTable.insertRow();
@@ -41,7 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Prevent row click event when clicking the link
                     cell.querySelector('a').addEventListener('click', (e) => e.stopPropagation());
                 } else if (key !== 'contractFile') {
-                    cell.textContent = val || 'N/A'; // Fallback for missing values
+                    // Leave the cell empty if no value is provided
+                    cell.textContent = val || '';
                     cell.setAttribute('tabindex', '0'); // Add tab indexing
                 }
             });
@@ -91,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = Array.from(row.children);
         const verticalDataContainer = document.getElementById("verticalData");
 
-        verticalDataContainer.innerHTML = "";
+        verticalDataContainer.innerHTML = ""; // Clear previous data
 
         headers.forEach((header, index) => {
             const headerText = header.textContent;
@@ -115,4 +116,5 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("modalOverlay").style.display = "none";
     });
 });
+
 
