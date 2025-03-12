@@ -31,11 +31,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         data.forEach((item) => {
             const row = resultTable.insertRow();
+
             Object.entries(item).forEach(([key, val]) => {
-                if (key !== 'contractFile') {
-                    const cell = row.insertCell();
-                    cell.textContent = val;
-                    cell.setAttribute('tabindex', '0');
+                const cell = row.insertCell();
+
+                if (key === 'Service Contract' && val) {
+                    // Display "View PDF" as a clickable link
+                    cell.innerHTML = `<a href="${val}" target="_blank" class="service-contract-link">View PDF</a>`;
+                    // Prevent row click event when clicking the link
+                    cell.querySelector('a').addEventListener('click', (e) => e.stopPropagation());
+                } else if (key !== 'contractFile') {
+                    cell.textContent = val || 'N/A'; // Fallback for missing values
+                    cell.setAttribute('tabindex', '0'); // Add tab indexing
                 }
             });
 
@@ -108,5 +115,4 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("modalOverlay").style.display = "none";
     });
 });
-
 
