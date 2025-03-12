@@ -27,17 +27,29 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Displaying results:', data); // Log the data to be displayed
         const resultTable = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
 
-        resultTable.innerHTML = '';
+        resultTable.innerHTML = ''; // Clear existing rows
 
         data.forEach((item) => {
             const row = resultTable.insertRow();
             Object.entries(item).forEach(([key, val]) => {
-                if (key !== 'contractFile') {
+                if (key !== 'Service Contract') { // Skip Service Contract column here
                     const cell = row.insertCell();
                     cell.textContent = val;
                     cell.setAttribute('tabindex', '0');
                 }
             });
+
+            // Add a cell for the Service Contract
+            const serviceContractCell = row.insertCell();
+            if (item['Service Contract']) {
+                const link = document.createElement('a');
+                link.href = item['Service Contract']; // Use the value of the "Service Contract" field as the link
+                link.textContent = 'View Contract';
+                link.target = '_blank'; // Open in a new tab
+                serviceContractCell.appendChild(link);
+            } else {
+                serviceContractCell.textContent = 'No Contract';
+            }
 
             row.addEventListener("click", handleRowClick); // Add click event listener to each row
         });
@@ -108,4 +120,3 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("modalOverlay").style.display = "none";
     });
 });
-
