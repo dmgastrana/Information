@@ -42,21 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
             row.insertCell().textContent = item['Equipment'] || ''; // Column 9
             row.insertCell().textContent = item['Contract/Warranty Begin'] || ''; // Column 10
             row.insertCell().textContent = item['Contract/Warranty End'] || ''; // Column 11
-             row.insertCell().textContent = item['Service Contract'] || ''; // Column 12
-
-            // Insert a cell for the Service Contract column with a clickable link
-            const serviceContractCell = row.insertCell();
-            if (item['Service Contract']) {
-                const link = document.createElement('a');
-                // Construct the full URL for the Service Contract
-                link.href = `https://raw.githubusercontent.com/dmgastrana/Information/main/${item['Service Contract']}`;
-                link.textContent = 'View Contract';
-                link.target = '_blank'; // Open in a new tab
-                serviceContractCell.appendChild(link);
-            } else {
-                serviceContractCell.textContent = ''; // Leave blank if no contract
-            }
-
+            row.insertCell().textContent = item['Service Contract'] || ''; // Column 12
             row.insertCell().textContent = item['Service Support'] || ''; // Column 13
             row.insertCell().textContent = item['Support Phone#'] || ''; // Column 14
             row.insertCell().textContent = item['Support Email'] || ''; // Column 15
