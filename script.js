@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Prevent row click event when clicking the link
                     cell.querySelector('a').addEventListener('click', (e) => e.stopPropagation());
                 } else if (key !== 'contractFile') {
-                    // Leave the cell empty if no value is provided
+                    // Leave the cell empty if the value is null, undefined, or empty
                     cell.textContent = val || '';
                     cell.setAttribute('tabindex', '0'); // Add tab indexing
                 }
@@ -96,14 +96,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
         headers.forEach((header, index) => {
             const headerText = header.textContent;
-            const dataText = data[index].textContent;
+            const dataCell = data[index];
 
-            verticalDataContainer.innerHTML += `
-                <tr class="${headerText === 'Office' ? 'office-row' : ''}">
-                    <th>${headerText}</th>
-                    <td>${dataText}</td>
-                </tr>
-            `;
+            if (headerText === 'Service Contract' && dataCell.querySelector('a')) {
+                // Add a clickable "View PDF" link in the modal
+                verticalDataContainer.innerHTML += `
+                    <tr>
+                        <th>${headerText}</th>
+                        <td><a href="${dataCell.querySelector('a').href}" target="_blank" class="service-contract-link">View PDF</a></td>
+                    </tr>
+                `;
+            } else {
+                verticalDataContainer.innerHTML += `
+                    <tr>
+                        <th>${headerText}</th>
+                        <td>${dataCell.textContent}</td>
+                    </tr>
+                `;
+            }
         });
 
         document.getElementById("verticalView").style.display = "block";
@@ -116,5 +126,4 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("modalOverlay").style.display = "none";
     });
 });
-
 
