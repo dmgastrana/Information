@@ -2,13 +2,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const csvUrl = 'https://raw.githubusercontent.com/dmgastrana/Information/main/datatable.csv';
     let equipmentData = [];
 
-    console.log('Fetching CSV from URL:', csvUrl); // Log the URL
+    console.log('Fetching CSV from URL:', csvUrl);
 
     Papa.parse(csvUrl, {
         download: true,
         header: true,
         complete: function(results) {
-            console.log('Parsed CSV data:', results.data); // Log the parsed data
+            console.log('Parsed CSV data:', results.data);
             equipmentData = results.data;
             localStorage.setItem('equipmentData', JSON.stringify(equipmentData));
             displayResults(equipmentData);
@@ -18,13 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Add event listeners to search input fields
+    // Event listeners for search fields
     document.querySelectorAll('.search-container input').forEach(input => {
         input.addEventListener('input', filterTable);
     });
 
     function displayResults(data) {
-        console.log('Displaying results:', data); // Log the data to be displayed
+        console.log('Displaying results:', data);
         const resultTable = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
 
         resultTable.innerHTML = ''; // Clear previous rows
@@ -35,22 +35,25 @@ document.addEventListener('DOMContentLoaded', () => {
             Object.entries(item).forEach(([key, val]) => {
                 const cell = row.insertCell();
 
-                if (key === 'Service Contract' && val) {
-                    // Display "View PDF" as a clickable link
-                    cell.innerHTML = `<a href="${val}" target="_blank" class="service-contract-link">View PDF</a>`;
+                if (key === 'Service Contract') {
+                    // Generate "View PDF" link dynamically based on the Serial Number
+                    const serialNumber = item['Serial Number'] || '';
+                    const pdfUrl = `https://raw.githubusercontent.com/dmgastrana/Information/main/${serialNumber}.pdf`;
+
+                    cell.innerHTML = `<a href="${pdfUrl}" target="_blank" class="service-contract-link">View PDF</a>`;
                     // Prevent row click event when clicking the link
                     cell.querySelector('a').addEventListener('click', (e) => e.stopPropagation());
-                } else if (key !== 'contractFile') {
-                    // Leave the cell empty if the value is null, undefined, or empty
+                } else {
+                    // Populate other cells normally
                     cell.textContent = val || '';
-                    cell.setAttribute('tabindex', '0'); // Add tab indexing
+                    cell.setAttribute('tabindex', '0');
                 }
             });
 
-            row.addEventListener("click", handleRowClick); // Add click event listener to each row
+            row.addEventListener("click", handleRowClick);
         });
 
-        updateTotalRowCount(data.length); // Update total row count
+        updateTotalRowCount(data.length);
     }
 
     function updateTotalRowCount(count) {
@@ -59,29 +62,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function filterTable() {
-        console.log('Filtering table'); // Debug: Log when filtering starts
-
         const serialNumberValue = document.getElementById('serialNumber').value.toLowerCase();
         const makeValue = document.getElementById('make').value.toLowerCase();
         const officeValue = document.getElementById('office').value.toLowerCase();
         const modalityValue = document.getElementById('modality').value.toLowerCase();
 
-        console.log('Filter values:', serialNumberValue, makeValue, officeValue, modalityValue); // Debug: Log filter values
-
         const filteredData = equipmentData.filter(item => {
-            console.log('Checking item:', item); // Debug: Log each item being checked
-
-            const serialNumberMatch = item['Serial Number'] && item['Serial Number'].toLowerCase().includes(serialNumberValue);
-            const makeMatch = item['Make'] && item['Make'].toLowerCase().includes(makeValue);
-            const officeMatch = item['Office'] && item['Office'].toLowerCase().includes(officeValue);
-            const modalityMatch = item['Modality'] && item['Modality'].toLowerCase().includes(modalityValue);
-
-            console.log('Matches:', serialNumberMatch, makeMatch, officeMatch, modalityMatch); // Debug: Log match results
-
-            return serialNumberMatch && makeMatch && officeMatch && modalityMatch;
+            return (
+                (item['Serial Number'] || '').toLowerCase().includes(serialNumberValue) &&
+                (item['Make'] || '').toLowerCase().includes(makeValue) &&
+                (item['Office'] || '').toLowerCase().includes(officeValue) &&
+                (item['Modality'] || '').toLowerCase().includes(modalityValue)
+            );
         });
-
-        console.log('Filtered data:', filteredData); // Debug: Log the filtered data
 
         displayResults(filteredData);
     }
@@ -99,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const dataCell = data[index];
 
             if (headerText === 'Service Contract' && dataCell.querySelector('a')) {
-                // Add a clickable "View PDF" link in the modal
                 verticalDataContainer.innerHTML += `
                     <tr>
                         <th>${headerText}</th>
@@ -126,4 +118,5 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("modalOverlay").style.display = "none";
     });
 });
+
 
