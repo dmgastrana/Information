@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
             row.insertCell().textContent = item['Equipment'] || ''; // Column 9
             row.insertCell().textContent = item['Contract/Warranty Begin'] || ''; // Column 10
             row.insertCell().textContent = item['Contract/Warranty End'] || ''; // Column 11
+             row.insertCell().textContent = item['Service Contract'] || ''; // Column 12
 
             // Insert a cell for the Service Contract column with a clickable link
             const serviceContractCell = row.insertCell();
