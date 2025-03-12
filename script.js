@@ -24,34 +24,54 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function displayResults(data) {
-        console.log('Displaying results:', data); // Log the data to be displayed
         const resultTable = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
-
         resultTable.innerHTML = ''; // Clear existing rows
 
         data.forEach((item) => {
             const row = resultTable.insertRow();
-            Object.entries(item).forEach(([key, val]) => {
-                if (key !== 'Service Contract') { // Skip Service Contract column here
-                    const cell = row.insertCell();
-                    cell.textContent = val;
-                    cell.setAttribute('tabindex', '0');
-                }
-            });
 
-            // Add a cell for the Service Contract
+            // Insert cells in the correct column order
+            row.insertCell().textContent = item['Serial Number'] || ''; // Column 1
+            row.insertCell().textContent = item['UP#'] || ''; // Column 2
+            row.insertCell().textContent = item['Make'] || ''; // Column 3
+            row.insertCell().textContent = item['Office'] || ''; // Column 4
+            row.insertCell().textContent = item['Modality'] || ''; // Column 5
+            row.insertCell().textContent = item['Status'] || ''; // Column 6
+            row.insertCell().textContent = item['Room'] || ''; // Column 7
+            row.insertCell().textContent = item['Tech'] || ''; // Column 8
+            row.insertCell().textContent = item['Equipment'] || ''; // Column 9
+            row.insertCell().textContent = item['Contract/Warranty Begin'] || ''; // Column 10
+            row.insertCell().textContent = item['Contract/Warranty End'] || ''; // Column 11
+
+            // Insert a cell for the Service Contract column with a clickable link
             const serviceContractCell = row.insertCell();
             if (item['Service Contract']) {
                 const link = document.createElement('a');
-                link.href = item['Service Contract']; // Use the value of the "Service Contract" field as the link
+                // Construct the full URL for the Service Contract
+                link.href = `https://raw.githubusercontent.com/dmgastrana/Information/main/${item['Service Contract']}`;
                 link.textContent = 'View Contract';
                 link.target = '_blank'; // Open in a new tab
                 serviceContractCell.appendChild(link);
             } else {
-                serviceContractCell.textContent = ''; // Leave the cell blank
+                serviceContractCell.textContent = ''; // Leave blank if no contract
             }
 
-            row.addEventListener("click", handleRowClick); // Add click event listener to each row
+            row.insertCell().textContent = item['Service Support'] || ''; // Column 13
+            row.insertCell().textContent = item['Support Phone#'] || ''; // Column 14
+            row.insertCell().textContent = item['Support Email'] || ''; // Column 15
+            row.insertCell().textContent = item['Coverage Days Left'] || ''; // Column 16
+            row.insertCell().textContent = item['Service Annual Fee'] || ''; // Column 17
+            row.insertCell().textContent = item['Note'] || ''; // Column 18
+            row.insertCell().textContent = item['Purchase From'] || ''; // Column 19
+            row.insertCell().textContent = item['Purchase Date'] || ''; // Column 20
+            row.insertCell().textContent = item['Delivery Date'] || ''; // Column 21
+            row.insertCell().textContent = item['Install Date'] || ''; // Column 22
+            row.insertCell().textContent = item['Remove By'] || ''; // Column 23
+            row.insertCell().textContent = item['Remove Date'] || ''; // Column 24
+            row.insertCell().textContent = item['Remove Description'] || ''; // Column 25
+
+            // Add click event listener for each row (for vertical view modal)
+            row.addEventListener("click", handleRowClick);
         });
 
         updateTotalRowCount(data.length); // Update total row count
@@ -96,20 +116,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = Array.from(row.children);
         const verticalDataContainer = document.getElementById("verticalData");
 
-        verticalDataContainer.innerHTML = "";
+        verticalDataContainer.innerHTML = ""; // Clear the modal content
 
         headers.forEach((header, index) => {
             const headerText = header.textContent;
-            const dataText = data[index].textContent;
+            const dataText = data[index] ? data[index].textContent : ''; // Get cell data or fallback to empty
 
             verticalDataContainer.innerHTML += `
-                <tr class="${headerText === 'Office' ? 'office-row' : ''}">
+                <tr>
                     <th>${headerText}</th>
                     <td>${dataText}</td>
                 </tr>
             `;
         });
 
+        // Show the modal
         document.getElementById("verticalView").style.display = "block";
         document.getElementById("modalOverlay").style.display = "block";
     }
