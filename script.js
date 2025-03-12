@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 link.target = '_blank'; // Open in a new tab
                 serviceContractCell.appendChild(link);
             } else {
-                serviceContractCell.textContent = 'No Contract';
+                serviceContractCell.textContent = ''; // Leave the cell blank
             }
 
             row.addEventListener("click", handleRowClick); // Add click event listener to each row
@@ -120,3 +120,4 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("modalOverlay").style.display = "none";
     });
 });
+
