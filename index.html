@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipment Listing</title>
+    <title>Equipment Listing</title> <!-- Updated title -->
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
@@ -62,6 +61,18 @@
             white-space: nowrap;
         }
 
+        #resultTable th:nth-child(8),
+        #resultTable td:nth-child(8) {
+            min-width: 70px;
+            max-width: 150px;
+        }
+
+        #resultTable th:nth-child(9),
+        #resultTable td:nth-child(9) {
+            min-width: 300px;
+            max-width: 600px;
+        }
+
         .vertical-view {
             display: none;
             position: fixed;
@@ -78,37 +89,27 @@
             overflow: auto;
         }
 
-        .popup {
-            display: none;
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #fff;
+        .vertical-view table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .vertical-view th, .vertical-view td {
             border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 300px;
-            padding: 20px;
-            z-index: 1000;
+            padding: 8px;
+            text-align: left;
         }
 
-        .popup h3 {
-            margin-top: 0;
+        .vertical-view th {
+            background-color: #f2f2f2;
         }
 
-        .popup button {
-            margin-top: 15px;
-            padding: 10px 20px;
-            background-color: #007BFF;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
+        .vertical-view .close {
             cursor: pointer;
-        }
-
-        .popup button:hover {
-            background-color: #0056b3;
+            color: red;
+            float: right;
+            font-size: 18px;
+            margin-top: -15px;
         }
 
         .hidden {
@@ -140,12 +141,30 @@
             <thead>
                 <tr>
                     <th>Serial Number</th>
+                    <th>UP#</th>
                     <th>Make</th>
                     <th>Office</th>
                     <th>Modality</th>
+                    <th>Status</th>
+                    <th>Room</th>
+                    <th>Tech</th>
                     <th>Equipment</th>
                     <th>Contract/Warranty Begin</th>
                     <th>Contract/Warranty End</th>
+                    <th>Service Contract</th>
+                    <th>Service Support</th>
+                    <th>Support Phone#</th>
+                    <th>Support Email</th>
+                    <th>Coverage Days left</th>
+                    <th>Service Annual Fee</th>
+                    <th>Note</th>
+                    <th>Purchase From</th>
+                    <th>Purchase Date</th>
+                    <th>Delivery Date</th>
+                    <th>Install Date</th>
+                    <th>Remove By</th>
+                    <th>Remove Date</th>
+                    <th>Remove Description</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -153,104 +172,32 @@
         <div id="rowCount"></div>
     </div>
 
-    <div id="warrantyPopup" class="popup">
-        <h3>Warranty Reminder</h3>
-        <p id="popupMessage"></p>
-        <button onclick="closeWarrantyPopup()">Close</button>
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="vertical-view" id="verticalView">
+        <span class="close" id="closeModal">&times;</span>
+        <table>
+            <tbody id="verticalData"></tbody>
+        </table>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="script.js"></script>
     <script>
-        const csvUrl = 'https://raw.githubusercontent.com/dmgastrana/Information/main/datatable.csv';
-        let equipmentData = [];
+        // Password protection
+        var password = "dmg1129"; // Replace 'dmg1129' with your desired password
+        var enteredPassword = prompt("Please enter the password:");
 
-        document.addEventListener('DOMContentLoaded', () => {
-            var password = "dmg1129";
-            var enteredPassword = prompt("Please enter the password:");
-            if (enteredPassword === password) {
-                document.getElementById("content").classList.remove("hidden");
+        if (enteredPassword === password) {
+            document.getElementById("content").classList.remove("hidden");
+        } else {
+            document.body.innerHTML = "Invalid Password.";
+        }
 
-                // Parse CSV
-                Papa.parse(csvUrl, {
-                    download: true,
-                    header: true,
-                    complete: function(results) {
-                        equipmentData = results.data;
-                        localStorage.setItem('equipmentData', JSON.stringify(equipmentData));
-                        displayResults(equipmentData);
-                        checkWarranty(equipmentData); // Call warranty check
-                    },
-                    error: function(error) {
-                        console.error('Error parsing CSV:', error);
-                    }
-                });
-
-                document.querySelectorAll('.search-container input').forEach(input => {
-                    input.addEventListener('input', filterTable);
-                });
-            } else {
-                document.body.innerHTML = "Invalid Password.";
-            }
+        // Close modal function
+        document.getElementById("closeModal").addEventListener("click", function () {
+            document.getElementById("verticalView").style.display = "none";
+            document.getElementById("modalOverlay").style.display = "none";
         });
-
-        // Display table rows
-        function displayResults(data) {
-            const resultTable = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
-            resultTable.innerHTML = '';
-            data.forEach(item => {
-                const row = resultTable.insertRow();
-                Object.entries(item).forEach(([key, val]) => {
-                    const cell = row.insertCell();
-                    cell.textContent = val || '';
-                });
-            });
-            updateTotalRowCount(data.length);
-        }
-
-        function updateTotalRowCount(count) {
-            const rowCountElement = document.getElementById('rowCount');
-            rowCountElement.textContent = `Total Rows: ${count}`;
-        }
-
-        function filterTable() {
-            const serialNumberValue = document.getElementById('serialNumber').value.toLowerCase();
-            const makeValue = document.getElementById('make').value.toLowerCase();
-            const officeValue = document.getElementById('office').value.toLowerCase();
-            const modalityValue = document.getElementById('modality').value.toLowerCase();
-
-            const filteredData = equipmentData.filter(item => {
-                return (
-                    (item['Serial Number'] || '').toLowerCase().includes(serialNumberValue) &&
-                    (item['Make'] || '').toLowerCase().includes(makeValue) &&
-                    (item['Office'] || '').toLowerCase().includes(officeValue) &&
-                    (item['Modality'] || '').toLowerCase().includes(modalityValue)
-                );
-            });
-
-            displayResults(filteredData);
-        }
-
-        function checkWarranty(data) {
-            const currentDate = new Date();
-            const popup = document.getElementById('warrantyPopup');
-            const message = document.getElementById('popupMessage');
-
-            data.forEach(item => {
-                if (item['Contract/Warranty End']) {
-                    const warrantyEndDate = new Date(item['Contract/Warranty End']);
-                    const daysRemaining = Math.ceil((warrantyEndDate - currentDate) / (1000 * 60 * 60 * 24));
-                    if (daysRemaining > 0 && daysRemaining <= 30) {
-                        message.innerText = `The warranty for ${item['Equipment']} (Serial Number: ${item['Serial Number']}) will expire on ${item['Contract/Warranty End']}.`;
-                        popup.style.display = 'block';
-                    }
-                }
-            });
-        }
-
-        function closeWarrantyPopup() {
-            document.getElementById('warrantyPopup').style.display = 'none';
-        }
     </script>
 </body>
-</html>
 
