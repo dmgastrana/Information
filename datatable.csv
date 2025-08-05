@@ -10,7 +10,7 @@ CPD200963k17 ,,Toshiba,AR,X-Ray,In Use,,,"Xray New Universal High Frequency Radi
 HDA06Y2409,,Toshiba,CI,CT,In Use,,,CT Toshiba 128 Slice,3/21/2025,3/21/2029,,Advanced Imaging Services,800-200-3583,,,"$72,000.00 ",,,,,,,,
 Id:PA51077,,GE,CI,Dexa,In Use,,,DEXA GE Lunar system,,,,AR RAD Consulting,877-299-8303,info@arrad.net,,,1 pm/yr,,,,,,,
 28011099319,,Hologic,CI,Mammo,In Use,,,Mammo Hologic Selenia (old),10/1/2022,9/30/2025,,AR RAD Consulting,877-299-8303,info@arrad.net,,"$17,000.00 ",2 pm/yr,,,,,,,
-s131800166 ,,Hologic,CI,Mammo,In Use,,,Mammo Hologic Selenia Dimensions 2D,10/20/2022,10/19/2026,,Hologic,877-371-4372,ServiceOperations@hologic.com,,"$36,082.00 ",2 pm/yr,,,,,,,
+SDM131800166 ,,Hologic,CI,Mammo,In Use,,,Mammo Hologic Selenia Dimensions 2D,10/20/2022,10/19/2026,,Hologic,877-371-4372,ServiceOperations@hologic.com,,"$36,082.00 ",2 pm/yr,,,,,,,
 R5930,,GE,CI,MRI,In Use,,,MRI GE 23 X,1/22/2025,1/22/2028,,,,,,"$86,400.00 ",,,,,,,,
 501896us7,,GE,CI,Ultrasound,In Use,Room 1,Cathy,Ultrasound GE Loqiq E10  ,,,,Valco Medical (Jose),951-667-9845,,,,warranty expired-Cindy says no need to have servic econtract,Valco Medical (Jose),,,,,,
 204729us6,,GE,CI,Ultrasound,In Use,Room 5,Allison,Ultrasound GE Logic E9 ,1/20/2020,1/19/2027,,GE Cares,800-437-1171,JhonMark.Dayonot@gehealthcare.com ,,"$6,497.00 ",incl 1 pm/year,,,,,,,
@@ -43,3 +43,4 @@ LE9R200445,,GE,SG,Ultrasound,In Use,Room 3,Vicky/Van,Ultrasound GE Logic E9 ,2/4
 203531US6,,GE,SG,Ultrasound,In Use,Room 4,Ruby (use when hitachi is down),GE Logiq E9 R6 XDCLEAR  (new),11/11/2024,11/11/2025,,Valco Medical (Jose),951-667-9845,,,under warranty,11/12/2024: new machine installed,Valco Medical (Jose),,,,,,
 pp42114,,Sedecal,SG,X-Ray,In Use,,,X-Ray  Radiographic system Sedecal X Plus,,,,Digital Diagnostic LLC,714-249-3824,,,, 2 pm/yr ,,,,,,,
 KE11295102,UP0067,Hitachi,SG ,Ultrasound,In Use,Room 5,Ruby,Ultrasound Hitachi  Hi vision preirus,,,,Fujifilm,800-800-4925,"Gilito.Belmonte@fujifilm.com, shm-na-hcus-UltrasoundService@fujifilm.com",,,,,,,,,,
+
