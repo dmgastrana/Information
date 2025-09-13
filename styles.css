@@ -45,6 +45,15 @@ body {
     background-color: #f2f2f2;
 }
 
+#resultTable {
+    width: 100%;
+}
+
+#resultTable th,
+#resultTable td {
+    white-space: nowrap;
+}
+
 #resultTable th:nth-child(8),
 #resultTable td:nth-child(8) {
     min-width: 70px;
@@ -84,12 +93,12 @@ body {
     text-align: left;
 }
 
-.vertical-view td {
-    padding-left: 8px;
-}
-
 .vertical-view th {
     background-color: #f2f2f2;
+}
+
+.vertical-view td {
+    padding-left: 8px; /* Reduce padding to bring columns closer together */
 }
 
 .vertical-view .close {
@@ -115,9 +124,14 @@ body {
     z-index: 999;
 }
 
+/* Style for "Office" row to be in blue text */
 .vertical-view .office-row td {
     color: blue;
 }
+
+    
+  
+   
 
   
    
@@ -127,4 +141,5 @@ body {
     
   
    
+
 
