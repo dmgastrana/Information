@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 (item['Make'] || '').toLowerCase().includes(makeValue) &&
                 (item['Office'] || '').toLowerCase().includes(officeValue) &&
                 (item['Modality'] || '').toLowerCase().includes(modalityValue) &&
-                (item['Service Support'].toLowerCase().includes(servicesupportValue) &&
+                (item['Service Support'].toLowerCase().includes(servicesupportValue) 
             );
         });
 
@@ -138,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("modalOverlay").style.display = "none";
     });
 });
+
 
 
 
