@@ -57,6 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const makeValue = document.getElementById('make').value.toLowerCase();
         const officeValue = document.getElementById('office').value.toLowerCase();
         const modalityValue = document.getElementById('modality').value.toLowerCase();
+        const servicesupportValue = document.getElementById('servicesupport').value.toLowerCase();
+
 
         console.log('Filter values:', serialNumberValue, makeValue, officeValue, modalityValue); // Debug: Log filter values
 
@@ -67,10 +69,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const makeMatch = item['Make'] && item['Make'].toLowerCase().includes(makeValue);
             const officeMatch = item['Office'] && item['Office'].toLowerCase().includes(officeValue);
             const modalityMatch = item['Modality'] && item['Modality'].toLowerCase().includes(modalityValue);
+            const serviceSupportMatch = item['Service Support'] && item['Service Support'].toLowerCase().includes(servicesupportValue);
 
-            console.log('Matches:', serialNumberMatch, makeMatch, officeMatch, modalityMatch); // Debug: Log match results
 
-            return serialNumberMatch && makeMatch && officeMatch && modalityMatch;
+            console.log('Matches:', serialNumberMatch, makeMatch, officeMatch, modalityMatch, serviceSupportMatch); // Debug: Log match results
+           
+           
+            return serialNumberMatch && makeMatch && officeMatch && modalityMatch && serviceSupportMatch;
         });
 
         console.log('Filtered data:', filteredData); // Debug: Log the filtered data
@@ -108,6 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("modalOverlay").style.display = "none";
     });
 });
+
 
 
 
