@@ -135,7 +135,7 @@
             <input type="text" id="office" placeholder="Search by Office">
             <input type="text" id="modality" placeholder="Search by Modality">
             <input type="text" id="make" placeholder="Search by Make">
-          </div>
+        </div>
 
         <table id="resultTable" class="result">
             <thead>
@@ -151,7 +151,6 @@
                     <th>Equipment</th>
                     <th>Contract/Warranty Begin</th>
                     <th>Contract/Warranty End</th>
-                    <th>Service Contract</th>
                     <th>Service Support</th>
                     <th>Support Phone#</th>
                     <th>Support Email</th>
@@ -190,7 +189,7 @@
         if (enteredPassword === password) {
             document.getElementById("content").classList.remove("hidden");
         } else {
-            document.body.innerHTML = "Invalid Password.";
+            document.body.innerHTML = "Access denied.";
         }
 
         // Close modal function
@@ -200,6 +199,7 @@
         });
     </script>
 </body>
+
 
 
 
