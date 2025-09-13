@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     const csvUrl = 'https://raw.githubusercontent.com/dmgastrana/Information/main/datatable.csv';
     let equipmentData = [];
@@ -33,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         data.forEach(item => {
             const row = resultTable.insertRow(); // Add new row for each data item
-
             Object.entries(item).forEach(([key, val]) => {
                 const cell = row.insertCell();
 
@@ -70,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTotalRowCount(data.length); // Update row count
     }
 
-    // Update total row count display
+    // Update total row count display function
     function updateTotalRowCount(count) {
         const rowCountElement = document.getElementById('rowCount');
         rowCountElement.textContent = `Total Rows: ${count}`;
@@ -82,15 +80,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const makeValue = document.getElementById('make').value.toLowerCase();
         const officeValue = document.getElementById('office').value.toLowerCase();
         const modalityValue = document.getElementById('modality').value.toLowerCase();
-        
+        const supportcompanyValue = document.getElementById('supportcompany').value.toLowerCase();
 
         const filteredData = equipmentData.filter(item => {
             return (
                 (item['Serial Number'] || '').toLowerCase().includes(serialNumberValue) &&
                 (item['Make'] || '').toLowerCase().includes(makeValue) &&
                 (item['Office'] || '').toLowerCase().includes(officeValue) &&
-                (item['Modality'] || '').toLowerCase().includes(modalityValue) 
-                
+                (item['Modality'] || '').toLowerCase().includes(modalityValue) &&
+                (item['Support Company'] || '').toLowerCase().includes(supportcompanyValue)
             );
         });
 
@@ -138,9 +136,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("modalOverlay").style.display = "none";
     });
 });
-
-
-
 
 
 
