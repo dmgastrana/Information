@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Equipment Listing</title> <!-- Updated title -->
+    <title>Equipment Listing</title>
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
@@ -50,15 +50,6 @@
 
         .result th {
             background-color: #f2f2f2;
-        }
-
-        #resultTable {
-            width: 100%;
-        }
-
-        #resultTable th,
-        #resultTable td {
-            white-space: nowrap;
         }
 
         #resultTable th:nth-child(8),
@@ -135,6 +126,7 @@
             <input type="text" id="office" placeholder="Search by Office">
             <input type="text" id="modality" placeholder="Search by Modality">
             <input type="text" id="make" placeholder="Search by Make">
+            <input type="text" id="servicesupport" placeholder="Search by Service Support">
         </div>
 
         <table id="resultTable" class="result">
@@ -184,13 +176,12 @@
     <script src="script.js"></script>
     <script>
         // Password protection
-        var password = "dmg1129"; // Replace 'dmg1129' with your desired password
+        var password = "dmg1129";
         var enteredPassword = prompt("Please enter the password:");
-
         if (enteredPassword === password) {
             document.getElementById("content").classList.remove("hidden");
         } else {
-            document.body.innerHTML = "Access denied.";
+            document.body.innerHTML = "Invalid Password.";
         }
 
         // Close modal function
@@ -200,6 +191,7 @@
         });
     </script>
 </body>
+</html>
 
 
 
