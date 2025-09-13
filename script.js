@@ -81,13 +81,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const makeValue = document.getElementById('make').value.toLowerCase();
         const officeValue = document.getElementById('office').value.toLowerCase();
         const modalityValue = document.getElementById('modality').value.toLowerCase();
+        const supportcompanyValue = document.getElementById('supportcompany').value.toLowerCase();
 
         const filteredData = equipmentData.filter(item => {
             return (
                 (item['Serial Number'] || '').toLowerCase().includes(serialNumberValue) &&
                 (item['Make'] || '').toLowerCase().includes(makeValue) &&
                 (item['Office'] || '').toLowerCase().includes(officeValue) &&
-                (item['Modality'] || '').toLowerCase().includes(modalityValue)
+                (item['Modality'] || '').toLowerCase().includes(modalityValue) &&
+                (item['Support Company'] || '').toLowerCase().includes(supportcompanyValue)
             );
         });
 
@@ -135,4 +137,5 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("modalOverlay").style.display = "none";
     });
 });
+
 
