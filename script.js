@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 (item['Serial Number'] || '').toLowerCase().includes(serialNumberValue) &&
                 (item['Make'] || '').toLowerCase().includes(makeValue) &&
                 (item['Office'] || '').toLowerCase().includes(officeValue) &&
-                (item['Modality'] || '').toLowerCase().includes(modalityValue) &&
+                (item['Modality'] || '').toLowerCase().includes(modalityValue) 
                 
             );
         });
@@ -137,6 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("modalOverlay").style.display = "none";
     });
 });
+
 
 
 
