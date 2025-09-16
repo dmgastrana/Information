@@ -81,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const officeValue = document.getElementById('office').value.toLowerCase();
         const modalityValue = document.getElementById('modality').value.toLowerCase();
         const servicesupportValue = document.getElementById('servicesupport').value.toLowerCase();
+
         
         const filteredData = equipmentData.filter(item => {
             return (
@@ -136,6 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("modalOverlay").style.display = "none";
     });
 });
+
 
 
 
