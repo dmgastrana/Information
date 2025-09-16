@@ -84,7 +84,7 @@ body {
 
 .vertical-view table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: collapse;/* Ensure no extra borders */
 }
 
 .vertical-view th, .vertical-view td {
@@ -141,6 +141,7 @@ body {
     
   
    
+
 
 
 
