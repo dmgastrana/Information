@@ -84,7 +84,7 @@ body {
 
 .vertical-view table {
     width: 100%;
-    border-collapse: collapse;/* Ensure no extra borders */
+    border-collapse: collapse;
 }
 
 .vertical-view th, .vertical-view td {
@@ -124,14 +124,13 @@ body {
     z-index: 999;
 }
 
-/* Style for "Office" row to be in red text */
+/* Style for "Office" row to be in blue text */
 .vertical-view .office-row td {
-    color: red;
+    color: blue;
 }
 
     
-  
-   
+
 
 
 
@@ -141,6 +140,7 @@ body {
     
   
    
+
 
 
 
