@@ -124,9 +124,9 @@ body {
     z-index: 999;
 }
 
-/* Style for "Office" row to be in blue text */
+/* Style for "Office" row to be in red text */
 .vertical-view .office-row td {
-    color: blue;
+    color: red;
 }
 
     
@@ -141,6 +141,7 @@ body {
     
   
    
+
 
 
 
