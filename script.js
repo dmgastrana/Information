@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let expiringSoon = [];
 
         data.forEach(item => {
-            const endDateStr = item['Contract/Warranty End']; // FIXED COLUMN NAME
+            const endDateStr = item['Contract/Warranty End']; // ✅ CORRECT COLUMN NAME
             if (!endDateStr || endDateStr.toLowerCase() === "n/a" || endDateStr.toLowerCase() === "no contract") return;
 
             const endDate = new Date(endDateStr);
