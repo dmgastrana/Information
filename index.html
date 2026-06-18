@@ -142,7 +142,7 @@
                     <th>Tech</th>
                     <th>Equipment</th>
                     <th>Contract/Warranty Begin</th>
-                    <th>Contract/Warranty End</th>
+                    <th>Contract/Warranty End Date</th>
                     <th>Service Contract</th>
                     <th>Service Support</th>
                     <th>Support Phone#</th>
@@ -174,12 +174,14 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script src="script.js"></script>
+
     <script>
         // Password protection
-        var password = "dmg1129";
+        var password = "password";
         var enteredPassword = prompt("Please enter the password:");
         if (enteredPassword === password) {
             document.getElementById("content").classList.remove("hidden");
+            window.passwordAccepted = true;   // <-- REQUIRED FIX
         } else {
             document.body.innerHTML = "Invalid Password.";
         }
