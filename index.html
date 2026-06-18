@@ -174,14 +174,12 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script src="script.js"></script>
-
     <script>
         // Password protection
-        var password = "password";
+        var password = "dmg1129";
         var enteredPassword = prompt("Please enter the password:");
-        if (enteredPassword === dmg1129) {
+        if (enteredPassword === password) {
             document.getElementById("content").classList.remove("hidden");
-            window.passwordAccepted = true;   // <-- REQUIRED FIX
         } else {
             document.body.innerHTML = "Invalid Password.";
         }
@@ -194,6 +192,7 @@
     </script>
 </body>
 </html>
+
 
 
 
