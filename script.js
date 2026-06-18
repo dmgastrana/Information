@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
             equipmentData = results.data;
             localStorage.setItem('equipmentData', JSON.stringify(equipmentData));
             displayResults(equipmentData);
+
+            // 🔔 CHECK FOR CONTRACTS EXPIRING IN 90 DAYS
+            checkExpiringContracts(equipmentData);
         },
         error: function(error) {
             console.error('Error parsing CSV:', error);
@@ -82,14 +85,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const modalityValue = document.getElementById('modality').value.toLowerCase();
         const servicesupportValue = document.getElementById('servicesupport').value.toLowerCase();
 
-        
         const filteredData = equipmentData.filter(item => {
             return (
                 (item['Serial Number'] || '').toLowerCase().includes(serialNumberValue) &&
                 (item['Make'] || '').toLowerCase().includes(makeValue) &&
                 (item['Office'] || '').toLowerCase().includes(officeValue) &&
                 (item['Modality'] || '').toLowerCase().includes(modalityValue) &&
-                (item['Service Support'] || '').toLowerCase().includes(servicesupportValue) 
+                (item['Service Support'] || '').toLowerCase().includes(servicesupportValue)
             );
         });
 
@@ -136,10 +138,44 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("verticalView").style.display = "none";
         document.getElementById("modalOverlay").style.display = "none";
     });
+
+    // 🔔 CONTRACT EXPIRATION ALERT FUNCTION
+    function checkExpiringContracts(data) {
+        const today = new Date();
+        const ninetyDays = 90 * 24 * 60 * 60 * 1000;
+
+        let expiringSoon = [];
+
+        data.forEach(item => {
+            const endDateStr = item['Contract/Warranty End'];
+            if (!endDateStr) return;
+
+            const endDate = new Date(endDateStr);
+            if (isNaN(endDate)) return;
+
+            const timeDiff = endDate - today;
+
+            if (timeDiff > 0 && timeDiff <= ninetyDays) {
+                expiringSoon.push({
+                    serial: item['Serial Number'],
+                    office: item['Office'],
+                    modality: item['Modality'],
+                    endDate: endDateStr
+                });
+            }
+        });
+
+        if (expiringSoon.length > 0) {
+            let message = `⚠️ ${expiringSoon.length} contract(s) expire within 90 days:\n\n`;
+
+            expiringSoon.forEach(item => {
+                message += `• ${item.serial} (${item.modality}, ${item.office}) — Ends: ${item.endDate}\n`;
+            });
+
+            alert(message);
+        }
+    }
 });
-
-
-
 
 
 
