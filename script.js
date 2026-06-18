@@ -2,6 +2,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const csvUrl = 'https://raw.githubusercontent.com/dmgastrana/Information/main/datatable.csv';
     let equipmentData = [];
 
+    // Wait until password is accepted before running alerts
+    function waitForPassword(callback) {
+        const check = setInterval(() => {
+            if (window.passwordAccepted === true) {
+                clearInterval(check);
+                callback();
+            }
+        }, 200);
+    }
+
     Papa.parse(csvUrl, {
         download: true,
         header: true,
@@ -10,8 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('equipmentData', JSON.stringify(equipmentData));
             displayResults(equipmentData);
 
-            // Run alert AFTER table loads
-            checkExpiringContracts(equipmentData);
+            // 🔔 Run alert ONLY after password is accepted
+            waitForPassword(() => {
+                checkExpiringContracts(equipmentData);
+            });
         }
     });
 
@@ -125,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let expiringSoon = [];
 
         data.forEach(item => {
-            const endDateStr = item['Contract/Warranty End']; // ✅ CORRECT COLUMN NAME
+            const endDateStr = item['Contract/Warranty End']; // correct column
             if (!endDateStr || endDateStr.toLowerCase() === "n/a" || endDateStr.toLowerCase() === "no contract") return;
 
             const endDate = new Date(endDateStr);
@@ -154,7 +166,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
-
 
 
 
